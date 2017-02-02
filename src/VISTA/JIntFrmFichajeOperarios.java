@@ -45,7 +45,6 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
     int hora, minutos, segundos;
     Calendar calendario;
     Thread h1;
-//    private Dimension dim;
     
     
     FichajeOperariosBLL fichajeOperariobll=new FichajeOperariosBLL();
@@ -53,26 +52,11 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
     ArrayList<FichajeOperarios> fichajeOperariosSalida= new ArrayList();
     ArrayList<FichajeOperarios> fichajeOperariosInforme= new ArrayList();
     Date data=new Date();
-//    DateFormat hora1=new SimpleDateFormat("HH:mm");
+    
     public JIntFrmFichajeOperarios() throws SQLException {
-        
-        
-                //con esto obtienes en tamano en en x y y de tu monitor
-
-//        dim=super.getToolkit().getScreenSize();
-//
-//        super.setSize(dim);
-//
-//
-//        super.setVisible(true);
-//        
-        
-        
-        //String codigo="";
-        
+ 
         fichajeOperariosSalida=fichajeOperariobll.obtenerFichajeOperariosSalida(data);
         fichajeOperarios=fichajeOperariobll.obtenerFichajeOperarios(data);
-        //fichajeOperariosInforme=fichajeOperariobll.obtenerFichajeOperariosInforme(codigo);
         initComponents();
         
          
@@ -81,24 +65,28 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
             
         jTOperario.setEditable(false);
         jTFecha.setEditable(false);
-        jTFecha.setVisible(false);
+        jTFecha.setVisible(false);//SE UTILIZABA EN VERSIONES ANTERIORES, ACTUALMENTE NO SE UTILIZA
         jTHora.setEditable(false);
         jBreset.setVisible(true);
-        
-        //introducción hora
-        //jTHora.setText(hora1.format(data));
-        //introducción data
-        //jTFecha.setText(DatetoSpanishString(data));
         jDateChooser1.setDate(data);
+        //jDateChooser1.getDateEditor().setEnabled(false);
         
-        //modificar ancho columnas
+
+        //evento jDateChooser1 para realizar una acción
+            this.jDateChooser1.getDateEditor().getUiComponent().addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    if(evt.getClickCount()==1){  
+                        resetPantalla();
+                    }
+                }
+            });
+        
+        
+        
+        
+        
         refrescarDimensionesColumna();
-//        TableColumnModel columnModel = jTFichajeOperarios.getColumnModel();//modificador columnas tabla operarios entrada
-//        TableColumnModel columnModel2 = jTFichajeOperariosSalida.getColumnModel();//modificador columnas tabla operarios salida
-//        TableColumnModel columnModel3 = jTInformeOperario.getColumnModel();//modificardor columnas tabla informe operario
-//        dimensionesColumnas(columnModel);
-//        dimensionesColumnas(columnModel2);
-//        dimensionesColumnas2(columnModel3);
+
     }
     
     /**
@@ -171,12 +159,6 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel4.setText("INFROMACIÓN OPERARIO ");
-
-        jTFecha.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTFechaMouseClicked(evt);
-            }
-        });
 
         jLabel5.setText("HORA");
 
@@ -280,14 +262,12 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
 //        String fecha="";
 //        //fecha=(jTFecha.getText());
 //        fecha=getFecha(jDateChooser1);
-        
-        /***********************************************************/
-        //CONVERTIR 
-        Date data; 
+
+        //RECUPERAR FECHA DEL CALENDARIO
+//        Date data; 
         data=jDateChooser1.getDate();
 //        data=convertir_String_Date(fecha);
         
-        /*******************************************************/
         codigo=(String.valueOf(jTFichajeOperarios.getModel().getValueAt(row,0)));//devuelve el valor de la celda seleccionada
         nombre=(String.valueOf(jTFichajeOperarios.getModel().getValueAt(row,1)));
 
@@ -305,13 +285,8 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         jTInformeOperario.setModel(new ModeloTablaInformacionOperarioVista(fichajeOperariosInforme));//introducir contenido en la tabla jTInformeOperario
         TableColumnModel columnModel3 = jTInformeOperario.getColumnModel();//modificardor columnas tabla informe operario
         dimensionesColumnas2(columnModel3);
-        jTInformeOperario.setDefaultRenderer (Object.class, new FormatoTabla());//introducir color al fondo del las celdas vacías
+        //jTInformeOperario.setDefaultRenderer (Object.class, new FormatoTabla());//introducir color al fondo del las celdas vacías
                 
-
-//vaciarTabla();
-        //colorColumna(row);//COLOR DE COLUMNA
-        //cambiarTextoColumna(row);
-//cambiar color fondo //jTInformeOperario.setBackground(Color.red);
     }//GEN-LAST:event_jTFichajeOperariosMouseClicked
 
     private void jTFichajeOperariosSalidaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTFichajeOperariosSalidaMouseClicked
@@ -321,7 +296,7 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         String nombre="";
 //        String fecha="";
 //        fecha=(jTFecha.getText());
-        Date data; 
+        //Date data; 
         data=jDateChooser1.getDate();
         codigo=(String.valueOf(jTFichajeOperariosSalida.getModel().getValueAt(row,0)));//devuelve el valor de la celda seleccionada
         nombre=(String.valueOf(jTFichajeOperariosSalida.getModel().getValueAt(row,1)));
@@ -346,40 +321,14 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
     }//GEN-LAST:event_jTFichajeOperariosSalidaMouseClicked
 
     private void jBresetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBresetActionPerformed
-        try {
-            //Object nuevo[]= {temp.getRowCount()+1,"",""};
-//temp.addRow(nuevo);
-        fichajeOperariosSalida=fichajeOperariobll.obtenerFichajeOperariosSalida(data);
-        fichajeOperarios=fichajeOperariobll.obtenerFichajeOperarios(data);
-        fichajeOperariosInforme=fichajeOperariobll.obtenerFichajeOperariosInforme(null,data);
-        
-        } catch (SQLException ex) {
-            Logger.getLogger(JIntFrmFichajeOperarios.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        jTFichajeOperarios.setModel(new ModeloTablaFichajeOperariosVista(fichajeOperarios));
-        jTFichajeOperariosSalida.setModel(new ModeloTablaFichajeOperariosVista(fichajeOperariosSalida));
-        jTInformeOperario.setModel(new ModeloTablaInformacionOperarioVista(fichajeOperariosInforme));
-        jTOperario.setText("");
-        refrescarDimensionesColumna();
-       // ModeloTablaFichajeOperariosVista temp = (ModeloTablaFichajeOperariosVista) jTInformeOperario.getModel();
-//        Object row[]= {"","","",""};
-//        temp.addRow(row);
+        resetPantalla();
     }//GEN-LAST:event_jBresetActionPerformed
-
-    private void jTFechaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTFechaMouseClicked
-datechooser.beans.DateChooserCombo dateChooserCombo1 = new datechooser.beans.DateChooserCombo();       
-
-//DateChooserDialog dt = new DateChooserDialog();
-       //dt.showDialog(null);
-       //dateChooserDialog1.showDialog(null);
-    }//GEN-LAST:event_jTFechaMouseClicked
-//AL PRESIONAR LA TECLA ENTER
-    public void keyPressed(KeyEvent ke) {
-              if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                  System.out.println(jTFecha.getText());
-              }
-          }
+ //AL PRESIONAR LA TECLA ENTER, SE UTILIZABA PARA EL JTFecha
+//    public void keyPressed(KeyEvent ke) {
+//              if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+//                  System.out.println(jTFecha.getText());
+//              }
+//          }
     
     
     /**
@@ -471,10 +420,13 @@ datechooser.beans.DateChooserCombo dateChooserCombo1 = new datechooser.beans.Dat
 //RELOJ TIEMPO REAL
  @Override
     public void run() {
+        
         Thread ct = Thread.currentThread();
         while (ct == h1) {
             calcula();
             jTHora.setText(hora + ":" + minutos + ":" + segundos);
+            
+            //resetPantalla();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -487,23 +439,29 @@ datechooser.beans.DateChooserCombo dateChooserCombo1 = new datechooser.beans.Dat
         minutos = calendario.get(Calendar.MINUTE);
         segundos = calendario.get(Calendar.SECOND);
     }
-//    public void refrescarTablas(){
-//     jTFichajeOperariosSalida.setModel(ModeloTablaFichajeOperariosVista);
-//     ModeloTablaFichajeOperariosVista.fireTableDataChanged();
-//    
-//    }
-// 
-    public void colorColumna(int row){
-        String valor="";
-        valor=(String.valueOf(jTFichajeOperarios.getModel().getValueAt(row,2)));//devuelve el valor de la celda seleccionada
-        if(valor=="S"){
-            jTInformeOperario.setBackground(Color.YELLOW);
-        }
-//        jTInformeOperario.setDefaultRenderer (Object.class, new FormatoTabla());
-//        jTInformeOperario.setSelectionForeground(Color.lightGray);
-        //jTInformeOperario.setBackground(Color.red);
+    public void resetPantalla(){
+   
+        //if(data!=jDateChooser1.getDate()){
+            //System.out.println("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            try {
+            data=jDateChooser1.getDate();
+            fichajeOperariosSalida=fichajeOperariobll.obtenerFichajeOperariosSalida(data);
+            fichajeOperarios=fichajeOperariobll.obtenerFichajeOperarios(data);
+            fichajeOperariosInforme=fichajeOperariobll.obtenerFichajeOperariosInforme(null,data);
+
+            } catch (SQLException ex) {
+                Logger.getLogger(JIntFrmFichajeOperarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            jTFichajeOperarios.setModel(new ModeloTablaFichajeOperariosVista(fichajeOperarios));
+            jTFichajeOperariosSalida.setModel(new ModeloTablaFichajeOperariosVista(fichajeOperariosSalida));
+            jTInformeOperario.setModel(new ModeloTablaInformacionOperarioVista(fichajeOperariosInforme));
+            jTOperario.setText("");
+            refrescarDimensionesColumna();
+        //}
     
     }
+
     public void cambiarTextoColumna(int row){
         if(String.valueOf(jTInformeOperario.getValueAt(row,2)).equals("S")){            
             jTInformeOperario.setValueAt("SALIDA", row, 2);
@@ -548,7 +506,7 @@ datechooser.beans.DateChooserCombo dateChooserCombo1 = new datechooser.beans.Dat
 	}
 
     }
-//    
+//    CONVERTIR STRING A DATA
 //    public java.util.Date StringADate(String fecha){
 //	SimpleDateFormat formatoTexto=new SimpleDateFormat("dd-MM-yyy");
 //	Date fechaE=null;

@@ -252,9 +252,6 @@
     <Component class="javax.swing.JTextField" name="jTOperario">
     </Component>
     <Component class="javax.swing.JTextField" name="jTFecha">
-      <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTFechaMouseClicked"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="jTHora">
     </Component>
@@ -285,6 +282,9 @@
           <Dimension value="[87, 20]"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="JIntFrmFichajeOperarios_jDateChooser1"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
