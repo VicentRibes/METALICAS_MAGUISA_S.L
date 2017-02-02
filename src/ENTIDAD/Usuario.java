@@ -5,6 +5,8 @@
  */
 package ENTIDAD;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Informatica
@@ -12,6 +14,7 @@ package ENTIDAD;
 public class Usuario {
     private String username;
     private String password;
+    private ArrayList <Permiso> permisos;
 
     
     public Usuario(String username, String password) {
@@ -38,5 +41,14 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public ArrayList getPermisos() {
+        return permisos;
+    }
+
+    public void setPermisos(ArrayList permisos) {
+        this.permisos = permisos;
+    }
+    
     
 }
