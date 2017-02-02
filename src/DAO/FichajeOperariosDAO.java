@@ -25,7 +25,7 @@ public class FichajeOperariosDAO {
    /* private date fecha;
     fecha=fecha.getDay();*/
     
-    public static ArrayList <FichajeOperarios> obtenerFichajeOperarios() throws SQLException{
+    public static ArrayList <FichajeOperarios> obtenerFichajeOperarios(Date fecha) throws SQLException{
     Connection conexion=null;
     Connection conexion2=null;
         ResultSet resultSet;
@@ -63,7 +63,7 @@ public class FichajeOperariosDAO {
             + "                                          where f22.OPERARIO=f2.OPERARIO and f22.tipo='S' and f22.recno>f2.recno "
             + "                                          order by f22.recno) as FICHA_SALIDA "
             + "                                FROM E001_OPERARIO as op left join e001_fichajes2 as f2 on op.codigo=f2.OPERARIO and f2.tipo='E' JOIN E001_centrost as centro on f2.CENTROTRAB=centro.CODIGO "
-            + "                                 WHERE F2.FECHA='"+formatoFecha.format(fechaActual)+"' and f2.HORA=(select max(hora) from e001_fichajes2 as f22 where  f2.operario=f22.operario and f22.tipo='e' and f22.FECHA=f2.FECHA)) as a"
+            + "                                 WHERE F2.FECHA='"+formatoFecha.format(fecha)+"' and f2.HORA=(select max(hora) from e001_fichajes2 as f22 where  f2.operario=f22.operario and f22.tipo='e' and f22.FECHA=f2.FECHA)) as a"
                     + "                     where FICHA_SALIDA is null "
          + "                                ORDER BY codigo");
             
@@ -90,7 +90,7 @@ public class FichajeOperariosDAO {
     
     
     
- public static ArrayList <FichajeOperarios> obtenerFichajeOperariosSalida() throws SQLException{
+ public static ArrayList <FichajeOperarios> obtenerFichajeOperariosSalida(Date fecha) throws SQLException{
 Connection conexion=null;
 Connection conexion2=null;
 
@@ -137,13 +137,13 @@ Connection conexion2=null;
 */
                    
              statement=conexion.prepareStatement("select OP.CODIGO,OP.NOMBRE,isnull((select top(1) hora "
-                     + "                                                             from e001_fichajes2 where operario=op.codigo and fecha='"+formatoFecha.format(fechaActual)+"' order by recno desc),'') AS HORA_SALIDA,"
+                     + "                                                             from e001_fichajes2 where operario=op.codigo and fecha='"+formatoFecha.format(fecha)+"' order by recno desc),'') AS HORA_SALIDA,"
                      + "                          isnull((select top(1) ct.DESCRIP from e001_fichajes2 as f2 LEFT JOIN E001_centrost as ct on f2.CENTROTRAB=ct.CODIGO "
-                     + "                                  where f2.fecha='"+formatoFecha.format(fechaActual)+"' and f2.operario=op.codigo and f2.tipo='E' "
+                     + "                                  where f2.fecha='"+formatoFecha.format(fecha)+"' and f2.operario=op.codigo and f2.tipo='E' "
                      + "                                  order by f2.recno desc),'') as CENTRO "
                      + "                          from carpingest.dbo.E001_OPERARIO as op left join presencia.dbo.MAG_Anexo_Operarios as anexop on op.CODIGO=anexop.CODIGO "
                      + "                          WHERE OP.BAJA=0 AND ANEXOP.Departamento<>10 and "
-                     + "                                  isnull((select top(1) tipo from e001_fichajes2 where operario=op.codigo and fecha='"+formatoFecha.format(fechaActual)+"' order by recno desc),'S')='S'");
+                     + "                                  isnull((select top(1) tipo from e001_fichajes2 where operario=op.codigo and fecha='"+formatoFecha.format(fecha)+"' order by recno desc),'S')='S'");
 
                    
                    

@@ -16,13 +16,13 @@ import java.util.Date;
  * @author miguel
  */
 public class FichajeOperariosBLL {
-        public ArrayList <FichajeOperarios> obtenerFichajeOperarios() throws SQLException{
+        public ArrayList <FichajeOperarios> obtenerFichajeOperarios(Date fecha) throws SQLException{
             FichajeOperariosDAO fichajeOperariosDAO=new FichajeOperariosDAO();
-            return fichajeOperariosDAO.obtenerFichajeOperarios();  
+            return fichajeOperariosDAO.obtenerFichajeOperarios(fecha);  
         }
-        public ArrayList <FichajeOperarios> obtenerFichajeOperariosSalida() throws SQLException{
+        public ArrayList <FichajeOperarios> obtenerFichajeOperariosSalida(Date fecha) throws SQLException{
             FichajeOperariosDAO fichajeOperariosDAO=new FichajeOperariosDAO();
-            return fichajeOperariosDAO.obtenerFichajeOperariosSalida();  
+            return fichajeOperariosDAO.obtenerFichajeOperariosSalida(fecha);  
         }
         public ArrayList <FichajeOperarios> obtenerFichajeOperariosInforme(String codigo,Date fecha) throws SQLException{
             FichajeOperariosDAO fichajeOperariosDAO=new FichajeOperariosDAO();

@@ -26,6 +26,7 @@ import javax.swing.table.TableModel;
 import MODELOS.FormatoTabla;
 import MODELOS.ModeloTablaFichajeOperariosVista;
 import MODELOS.ModeloTablaInformacionOperarioVista;
+import com.toedter.calendar.JDateChooser;
 //PARA LA HORA EN TIEMPO REAL
 import java.util.Calendar;
 import java.util.Date;
@@ -69,8 +70,8 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         
         //String codigo="";
         
-        fichajeOperariosSalida=fichajeOperariobll.obtenerFichajeOperariosSalida();
-        fichajeOperarios=fichajeOperariobll.obtenerFichajeOperarios();
+        fichajeOperariosSalida=fichajeOperariobll.obtenerFichajeOperariosSalida(data);
+        fichajeOperarios=fichajeOperariobll.obtenerFichajeOperarios(data);
         //fichajeOperariosInforme=fichajeOperariobll.obtenerFichajeOperariosInforme(codigo);
         initComponents();
         
@@ -80,14 +81,15 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
             
         jTOperario.setEditable(false);
         jTFecha.setEditable(false);
+        jTFecha.setVisible(false);
         jTHora.setEditable(false);
         jBreset.setVisible(true);
         
         //introducción hora
         //jTHora.setText(hora1.format(data));
         //introducción data
-        jTFecha.setText(DatetoSpanishString(data));
-        
+        //jTFecha.setText(DatetoSpanishString(data));
+        jDateChooser1.setDate(data);
         
         //modificar ancho columnas
         refrescarDimensionesColumna();
@@ -124,6 +126,7 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jBreset = new javax.swing.JButton();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
 
         setClosable(true);
         setResizable(true);
@@ -186,6 +189,9 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
             }
         });
 
+        jDateChooser1.setDateFormatString("dd/MM/yyyy");
+        jDateChooser1.setPreferredSize(new java.awt.Dimension(87, 20));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -222,7 +228,9 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(101, 101, 101)
                                 .addComponent(jBreset, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jTHora, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -233,11 +241,13 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jBreset, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jBreset, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))))
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
@@ -255,7 +265,7 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
                     .addComponent(jTOperario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
 
         pack();
@@ -267,16 +277,15 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         //int col=jTFichajeOperarios.getSelectedColumn();//nº columna seleccionada
         String codigo="";
         String nombre="";
-        String fecha="";
-        fecha=(jTFecha.getText());
+//        String fecha="";
+//        //fecha=(jTFecha.getText());
+//        fecha=getFecha(jDateChooser1);
         
         /***********************************************************/
         //CONVERTIR 
         Date data; 
-        data=convertir_String_Date(fecha);
-        
-        
-        
+        data=jDateChooser1.getDate();
+//        data=convertir_String_Date(fecha);
         
         /*******************************************************/
         codigo=(String.valueOf(jTFichajeOperarios.getModel().getValueAt(row,0)));//devuelve el valor de la celda seleccionada
@@ -310,8 +319,10 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         //int col=jTFichajeOperarios.getSelectedColumn();//nº columna seleccionada
         String codigo="";
         String nombre="";
-        String fecha="";
-        fecha=(jTFecha.getText());
+//        String fecha="";
+//        fecha=(jTFecha.getText());
+        Date data; 
+        data=jDateChooser1.getDate();
         codigo=(String.valueOf(jTFichajeOperariosSalida.getModel().getValueAt(row,0)));//devuelve el valor de la celda seleccionada
         nombre=(String.valueOf(jTFichajeOperariosSalida.getModel().getValueAt(row,1)));
 
@@ -338,8 +349,8 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         try {
             //Object nuevo[]= {temp.getRowCount()+1,"",""};
 //temp.addRow(nuevo);
-        fichajeOperariosSalida=fichajeOperariobll.obtenerFichajeOperariosSalida();
-        fichajeOperarios=fichajeOperariobll.obtenerFichajeOperarios();
+        fichajeOperariosSalida=fichajeOperariobll.obtenerFichajeOperariosSalida(data);
+        fichajeOperarios=fichajeOperariobll.obtenerFichajeOperarios(data);
         fichajeOperariosInforme=fichajeOperariobll.obtenerFichajeOperariosInforme(null,data);
         
         } catch (SQLException ex) {
@@ -411,6 +422,7 @@ datechooser.beans.DateChooserCombo dateChooserCombo1 = new datechooser.beans.Dat
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBreset;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -525,6 +537,29 @@ datechooser.beans.DateChooserCombo dateChooserCombo1 = new datechooser.beans.Dat
 //    System.out.println(fecha.toString());
         return fecha;
     }
-    
+            
+    public String getFecha(JDateChooser jd){
+        SimpleDateFormat Formato=new SimpleDateFormat("dd-MM-yyy");
+	if(jd.getDate()!=null){
+		return Formato.format(jd.getDate());
+	}
+	else{
+		return null;
+	}
+
+    }
+//    
+//    public java.util.Date StringADate(String fecha){
+//	SimpleDateFormat formatoTexto=new SimpleDateFormat("dd-MM-yyy");
+//	Date fechaE=null;
+//	try{
+//		fechaE= formatoTexto.parse(fecha);
+//		return fechaE;
+//	}catch (ParseException ex){
+//		return null;
+//
+//	}
+//    }
+
     
 }
