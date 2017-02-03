@@ -7,6 +7,9 @@
 package VISTA;
 
 
+import BLL.UsuarioBLL;
+import ENTIDAD.Permiso;
+import ENTIDAD.Usuario;
 import UTILIDADES.ImagenFondo;
 import VISTA.JIntFrmArtFichajes;
 import VISTA.JIntFrmCrearPalets;
@@ -16,6 +19,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -27,6 +31,8 @@ import javax.swing.UIManager;
  *
  * @author vicent
  */
+
+
 public class MAGUISA extends javax.swing.JFrame {
 
 
@@ -34,22 +40,56 @@ public class MAGUISA extends javax.swing.JFrame {
     /**
      * Creates new form Veterinaria
      */
-   
+    public static Usuario us;
     public MAGUISA() {
         try {
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"); //CAMBIAMOS EL ASPECTO DE LA APLICACION PARA HACERLO MAS AGRADABLE
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
+        UsuarioBLL usBLL=new UsuarioBLL();
+        double entradaOrd=0;        
+        try {
+            us = usBLL.obtenerUsuario();
+            us = usBLL.obtenerPermisos();
+        } catch (SQLException ex) {          
+            JOptionPane.showMessageDialog(null,ex, "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        
         initComponents();
+        gestionPermisos();
         /*jMenuItem_ArtFichajes.setVisible(false);
         jMenuItem_NuevaOrden.setVisible(false);
         jMenuItemPalets.setVisible(false);*/
-        //jPanelPrincipal.setBorder(new ImagenFondo());
+        jPanelPrincipal.setBorder(new ImagenFondo());
         this.setExtendedState(MAGUISA.MAXIMIZED_BOTH);
         
+  
+        
     }
-    
+       private void gestionPermisos(){
+       jMenuOrdenes.setVisible(false);        
+       jMenuOperarios.setVisible(false);     
+  
+        Iterator<Permiso> i = us.getPermisos().iterator();
+        while( i.hasNext() ){
+          Permiso p=i.next();
+          int idPermiso;
+          idPermiso=p.getId_permiso();
+          switch (idPermiso){
+              case 1:
+                  jMenuOrdenes.setVisible(true);        
+                  jMenuOperarios.setVisible(true);
+                  break;
+              case 2:
+                  jMenuOrdenes.setVisible(true);                           
+                  break;
+              case 3:                         
+                  jMenuOperarios.setVisible(true);          
+                  break;
+          }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,9 +109,7 @@ public class MAGUISA extends javax.swing.JFrame {
         jMenuIxir = new javax.swing.JMenuItem();
         jMenuOrdenes = new javax.swing.JMenu();
         jMenuItem_NuevaOrden = new javax.swing.JMenuItem();
-        jMenuItemPalets = new javax.swing.JMenuItem();
-        jMenuProduccion = new javax.swing.JMenu();
-        jMenuItem_ArtFichajes = new javax.swing.JMenuItem();
+        jMenuOperarios = new javax.swing.JMenu();
         jMenuItem_OperariosActivos = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuSobre = new javax.swing.JMenuItem();
@@ -122,28 +160,10 @@ public class MAGUISA extends javax.swing.JFrame {
         });
         jMenuOrdenes.add(jMenuItem_NuevaOrden);
 
-        jMenuItemPalets.setText("Creador Palets");
-        jMenuItemPalets.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemPaletsActionPerformed(evt);
-            }
-        });
-        jMenuOrdenes.add(jMenuItemPalets);
-
         jMenuBar1.add(jMenuOrdenes);
 
-        jMenuProduccion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/ICONOS/users.png"))); // NOI18N
-        jMenuProduccion.setText("Operarios");
-
-        jMenuItem_ArtFichajes.setText("Articulo Fichajes");
-        jMenuItem_ArtFichajes.setToolTipText("");
-        jMenuItem_ArtFichajes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jMenuItem_ArtFichajes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem_ArtFichajesActionPerformed(evt);
-            }
-        });
-        jMenuProduccion.add(jMenuItem_ArtFichajes);
+        jMenuOperarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/ICONOS/users.png"))); // NOI18N
+        jMenuOperarios.setText("Operarios");
 
         jMenuItem_OperariosActivos.setText("Operarios Activos");
         jMenuItem_OperariosActivos.addActionListener(new java.awt.event.ActionListener() {
@@ -151,9 +171,9 @@ public class MAGUISA extends javax.swing.JFrame {
                 jMenuItem_OperariosActivosActionPerformed(evt);
             }
         });
-        jMenuProduccion.add(jMenuItem_OperariosActivos);
+        jMenuOperarios.add(jMenuItem_OperariosActivos);
 
-        jMenuBar1.add(jMenuProduccion);
+        jMenuBar1.add(jMenuOperarios);
 
         jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/ICONOS/ayuda.png"))); // NOI18N
         jMenu2.setText("Ayuda");
@@ -202,7 +222,7 @@ public class MAGUISA extends javax.swing.JFrame {
 
     private void jMenuItem_NuevaOrdenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_NuevaOrdenActionPerformed
         // TODO add your handling code here:
-      
+       
         JIntFrmNuevaOrdInterna nuevaOrden = null;
         
         try {
@@ -223,46 +243,6 @@ public class MAGUISA extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex, "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jMenuItem_NuevaOrdenActionPerformed
-
-    private void jMenuItemPaletsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPaletsActionPerformed
-         // TODO add your handling code here:
-      
-        JIntFrmCrearPalets nuevoPalet=null;
-        try {
-            nuevoPalet = new JIntFrmCrearPalets();
-            //int x=(jPanelPrincipal.getWidth()/2-nuevaOrden.getWidth()/2);
-            //int y=(jPanelPrincipal.getHeight()/2-nuevaOrden.getHeight()/2);
-        } catch (SQLException ex) {
-            Logger.getLogger(MAGUISA.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-        jPanelPrincipal.add(nuevoPalet);
-        //nuevaOrden.setLocation(x, y);
-        nuevoPalet.show();
-        try {
-            nuevoPalet.setMaximum(true); //Maximizamos el jinternalframe para que ocupe toda la pantalla
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(MAGUISA.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, ex, "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_jMenuItemPaletsActionPerformed
-
-    private void jMenuItem_ArtFichajesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_ArtFichajesActionPerformed
-         // TODO add your handling code here:
-      
-        JIntFrmArtFichajes fichajes=null;
-        fichajes = new JIntFrmArtFichajes();
-            
-        jPanelPrincipal.add(fichajes);
-        //nuevaOrden.setLocation(x, y);
-        fichajes.show();
-        try {
-            fichajes.setMaximum(true); //Maximizamos el jinternalframe para que ocupe toda la pantalla
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(MAGUISA.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, ex, "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_jMenuItem_ArtFichajesActionPerformed
 
     private void jMenuItem_OperariosActivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_OperariosActivosActionPerformed
             JIntFrmFichajeOperarios ficOp=null;
@@ -322,6 +302,10 @@ public class MAGUISA extends javax.swing.JFrame {
         });
         
     }
+      
+ 
+
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
@@ -330,13 +314,11 @@ public class MAGUISA extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenuItem jMenuItemPalets;
-    private javax.swing.JMenuItem jMenuItem_ArtFichajes;
     private javax.swing.JMenuItem jMenuItem_NuevaOrden;
     private javax.swing.JMenuItem jMenuItem_OperariosActivos;
     private javax.swing.JMenuItem jMenuIxir;
+    private javax.swing.JMenu jMenuOperarios;
     private javax.swing.JMenu jMenuOrdenes;
-    private javax.swing.JMenu jMenuProduccion;
     private javax.swing.JMenuItem jMenuSobre;
     public javax.swing.JDesktopPane jPanelPrincipal;
     // End of variables declaration//GEN-END:variables

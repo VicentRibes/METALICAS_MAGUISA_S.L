@@ -7,6 +7,7 @@ package BLL;
 
 import DAO.UsuarioDAO;
 import ENTIDAD.Usuario;
+import static VISTA.MAGUISA.us;
 import java.sql.SQLException;
 
 /**
@@ -21,5 +22,8 @@ public class UsuarioBLL {
     public Usuario obtenerUsuario() throws SQLException{
         return usuarioDAO.obtenerUsuario();
         
+    }
+    public Usuario obtenerPermisos() throws SQLException{
+        return usuarioDAO.obtenerPermisos(us);
     }
 }

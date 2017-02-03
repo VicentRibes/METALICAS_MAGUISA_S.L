@@ -45,12 +45,12 @@ public class UsuarioDAO {
         }
         return us;
     }
-    public static Usuario obtenerPermisos(Usuario us) throws SQLException{
+    public Usuario obtenerPermisos(Usuario us) throws SQLException{
         Connection conexion=null;
         ResultSet resultSet;
         PreparedStatement statement;    
         String username=System.getProperty("user.name");
-        ArrayList <Permiso> permisos = null;
+        ArrayList <Permiso> permisos = new ArrayList();
         Conexion con= new Conexion();
         conexion = con.connecta();  
         statement=conexion.prepareStatement("SELECT USPERM.ID_PERMISO "
