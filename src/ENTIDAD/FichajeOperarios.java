@@ -24,6 +24,15 @@ public class FichajeOperarios {
     private String Hora_Salida;
     private String Fecha_Entrada;
     private String Fecha_Salida;
+//    private String TotalMinutos;
+//
+//    public String getTotalMinutos() {
+//        return TotalMinutos;
+//    }
+//
+//    public void setTotalMinutos(String TotalMinutos) {
+//        this.TotalMinutos = TotalMinutos;
+//    }
 
     public String getHora_Entrada() {
         return Hora_Entrada;

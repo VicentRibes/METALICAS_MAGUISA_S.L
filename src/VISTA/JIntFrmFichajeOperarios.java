@@ -51,6 +51,8 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
     ArrayList<FichajeOperarios> fichajeOperarios= new ArrayList();
     ArrayList<FichajeOperarios> fichajeOperariosSalida= new ArrayList();
     ArrayList<FichajeOperarios> fichajeOperariosInforme= new ArrayList();
+//    ArrayList totalMinutos= new ArrayList();
+    String totalMinutos="";
     Date data=new Date();
     
     public JIntFrmFichajeOperarios() throws SQLException {
@@ -73,6 +75,8 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         
 
         //evento jDateChooser1 para realizar una acción
+        
+        //REFRESCAR PANTALLA HACIENDO CLICK EN LA DATA
             this.jDateChooser1.getDateEditor().getUiComponent().addMouseListener(new java.awt.event.MouseAdapter() {
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     if(evt.getClickCount()==1){  
@@ -105,16 +109,20 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTInformeOperario = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
-        jTOperario = new javax.swing.JTextField();
         jTFecha = new javax.swing.JTextField();
         jTHora = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jBreset = new javax.swing.JButton();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTInformeOperario = new javax.swing.JTable();
+        jTminutos = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jTOperario = new javax.swing.JTextField();
 
         setClosable(true);
         setResizable(true);
@@ -154,12 +162,6 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("CONTROL OPERARIOS");
 
-        jTInformeOperario.setModel(new ModeloTablaInformacionOperarioVista(fichajeOperariosInforme));
-        jScrollPane3.setViewportView(jTInformeOperario);
-
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel4.setText("INFROMACIÓN OPERARIO ");
-
         jLabel5.setText("HORA");
 
         jLabel6.setText("FECHA");
@@ -172,22 +174,60 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         });
 
         jDateChooser1.setDateFormatString("dd/MM/yyyy");
-        jDateChooser1.setPreferredSize(new java.awt.Dimension(87, 20));
+
+        jTInformeOperario.setModel(new ModeloTablaInformacionOperarioVista(fichajeOperariosInforme));
+        jScrollPane3.setViewportView(jTInformeOperario);
+
+        jLabel7.setText("TOTAL :");
+
+        jLabel8.setText("minutos");
+
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel4.setText("INFROMACIÓN OPERARIO ");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTminutos, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel8)
+                .addGap(35, 35, 35))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(jLabel4)
+                        .addGap(30, 30, 30)
+                        .addComponent(jTOperario, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTOperario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTminutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(200, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel4)
-                        .addGap(12, 12, 12)
-                        .addComponent(jTOperario, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(596, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -215,6 +255,10 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
                                 .addGap(101, 101, 101)
                                 .addComponent(jBreset, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jTHora, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(36, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(182, 182, 182)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -241,13 +285,9 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTOperario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(188, Short.MAX_VALUE))
+                .addGap(42, 42, 42)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(252, Short.MAX_VALUE))
         );
 
         pack();
@@ -285,6 +325,7 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         jTInformeOperario.setModel(new ModeloTablaInformacionOperarioVista(fichajeOperariosInforme));//introducir contenido en la tabla jTInformeOperario
         TableColumnModel columnModel3 = jTInformeOperario.getColumnModel();//modificardor columnas tabla informe operario
         dimensionesColumnas2(columnModel3);
+        sumar();//sumar horas
         //jTInformeOperario.setDefaultRenderer (Object.class, new FormatoTabla());//introducir color al fondo del las celdas vacías
                 
     }//GEN-LAST:event_jTFichajeOperariosMouseClicked
@@ -317,7 +358,8 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         jTInformeOperario.setModel(new ModeloTablaInformacionOperarioVista(fichajeOperariosInforme));//introducir contenido en la tabla jTInformeOperario
         TableColumnModel columnModel3 = jTInformeOperario.getColumnModel();//modificardor columnas tabla informe operario
         dimensionesColumnas2(columnModel3);
-        jTInformeOperario.setDefaultRenderer (Object.class, new FormatoTabla());//introducir color al fondo del las celdas vacías
+//        jTInformeOperario.setDefaultRenderer (Object.class, new FormatoTabla());//introducir color al fondo del las celdas vacías
+        sumar();//sumar horas
     }//GEN-LAST:event_jTFichajeOperariosSalidaMouseClicked
 
     private void jBresetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBresetActionPerformed
@@ -378,6 +420,9 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -387,6 +432,7 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
     private javax.swing.JTextField jTHora;
     private javax.swing.JTable jTInformeOperario;
     private javax.swing.JTextField jTOperario;
+    private javax.swing.JTextField jTminutos;
     // End of variables declaration//GEN-END:variables
   static void dimensionesColumnas(TableColumnModel columnModel){
               
@@ -457,6 +503,7 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
             jTFichajeOperariosSalida.setModel(new ModeloTablaFichajeOperariosVista(fichajeOperariosSalida));
             jTInformeOperario.setModel(new ModeloTablaInformacionOperarioVista(fichajeOperariosInforme));
             jTOperario.setText("");
+            jTminutos.setText("");
             refrescarDimensionesColumna();
         //}
     
@@ -518,6 +565,41 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
 //
 //	}
 //    }
+    
+    
+    double sumatoria0;
+    double sumatoria1=0;
+    Date dat;
+    
+    public void sumar(){
 
+//AQUI SE SUMAN LOS VALORES DE CADA FILA PARA COLOCARLO EN EL CAMPO DE TOTAL
+       
+        int totalRow= jTInformeOperario.getRowCount();
+        totalRow-=1;
+        
+        for(int i=0;i<=(totalRow);i++)
+        {
+            if(jTInformeOperario.getValueAt(i,2).equals("E")){
+                dat=convertir_String_Date(String.valueOf(jTInformeOperario.getValueAt(i,1)).toString());
+                System.out.println(dat+"dddddddddddddddddddddddddd");
+//                System.out.println(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+//                sumatoria0+=Double.parseDouble(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+                System.out.println(sumatoria0+"fffffffffffffffffffffffff");
+            }
+            if(jTInformeOperario.getValueAt(i,2).equals("S")){
+
+                System.out.println("salida");
+//                sumatoria0-=Double.parseDouble(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+                System.out.println(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+//            sumatoria=Integer.parseInt(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+            }//System.out.println(jTInformeOperario.getValueAt(i,2));
+//             sumatoria= Double.parseDouble(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+        }
+            sumatoria1+=sumatoria0;
+             
+            jTminutos.setText(String.valueOf(sumatoria1));
+
+    }
     
 }

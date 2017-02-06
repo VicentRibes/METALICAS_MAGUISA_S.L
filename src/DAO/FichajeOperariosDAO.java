@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -168,25 +169,26 @@ Connection conexion2=null;
             
     }
  
-     public static ArrayList <FichajeOperarios> obtenerFichajeOperariosInforme(String codigo,Date fecha) throws SQLException{
-    Connection conexion=null;
+    public static ArrayList <FichajeOperarios> obtenerFichajeOperariosInforme(String codigo,Date fecha) throws SQLException{
+        Connection conexion=null;
         ResultSet resultSet;
+        int tipo=0;
         PreparedStatement statement;
         ArrayList <FichajeOperarios> FichajeOperarios=new ArrayList();
         Conexion con=new Conexion();
         //java.util.Date fecha = new Date();
         
         //para saber la fecha actual
-        Date fechaActual = new Date();
+//        Date fechaActual = new Date();
         DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        
+        //System.out.println(formatoFecha.format(ayer(fecha)));
         //System.out.println(formatoFecha.format(fechaActual));
         
         try {
 
             conexion = con.connecta();
      
-
+/* consulta antigua
            
            statement=conexion.prepareStatement("select f2.hora,f2.tipo,centro.DESCRIP as CENTRO "
                    + "                          from E001_OPERARIO as op LEFT JOIN E001_Fichajes2 as f2 ON op.CODIGO=f2.OPERARIO JOIN E001_centrost as centro on f2.CENTROTRAB=centro.CODIGO "
@@ -199,15 +201,55 @@ Connection conexion2=null;
                    + "                              where f2.tipo='s' and op.codigo='"+codigo+"' and f2.fecha='"+formatoFecha.format(fecha)+"' "
                    + "                              group by op.codigo,op.nombre,f2.fecha,f2.hora,f2.tipo,centro.DESCRIP");
            
+           
+     */      
+           
+           
+           //esta consulta contempla las entradas que no tienen salida del dia anterior
+           statement=conexion.prepareStatement("select f2.hora,f2.tipo,centro.DESCRIP as CENTRO "
+                   + "                          from E001_OPERARIO as op LEFT JOIN E001_Fichajes2 as f2 ON op.CODIGO=f2.OPERARIO JOIN E001_centrost as centro on f2.CENTROTRAB=centro.CODIGO  "
+                   + "                          where f2.tipo='e' and op.codigo='"+codigo+"' and f2.fecha='"+formatoFecha.format(fecha)+"' or(f2.tipo='e' and f2.fecha='"+formatoFecha.format(ayer(fecha))+"' and f2.hora>'22:00:00' and (f2.tipo='s'and f2.fecha='"+formatoFecha.format(ayer(fecha))+"' and f2.hora>'22:00:00')) "
+                   + "                          group by f2.hora,f2.fecha,f2.tipo,centro.DESCRIP "
+                   + "                          union "
+                   + "                          select f2.hora,f2.tipo,centro.DESCRIP as CENTRO "
+                   + "                          from E001_OPERARIO as op LEFT JOIN E001_Fichajes2 as f2 ON op.CODIGO=f2.OPERARIO JOIN E001_centrost as centro on f2.CENTROTRAB=centro.CODIGO "
+                   + "                          where f2.tipo='s' and op.codigo='"+codigo+"' and f2.fecha='"+formatoFecha.format(fecha)+"' "
+                   + "                          group by op.codigo,op.nombre,f2.fecha,f2.hora,f2.tipo,centro.DESCRIP");
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+          /**************************************************************************/ 
            resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 FichajeOperarios fiop=new FichajeOperarios();            
 
                 fiop.setHora(resultSet.getString("hora"));
                 fiop.setTipo(resultSet.getString("TIPO"));
-
+                
                 fiop.setCentro(resultSet.getString("CENTRO"));
                 FichajeOperarios.add(fiop);
+                
+////                if(resultSet.getString("TIPO")=="E"){
+//////                    tipo=resultSet.getString("TIPO").toString();
+////                    System.out.println(resultSet.getString("hora").toString());
+////                
+////                }
+////                else{
+//////                    System.out.println(resultSet.getString("hora").toString());
+//////                    System.out.println(resultSet.getString("TIPO").toString());
+//////                    tipo=resultSet.getInt("hora");
+////                    System.out.println(resultSet.getInt("hora"));
+//////                    tipo=tipo-resultSet.getString("hora");
+//////                    System.out.println(tipo+"holaaaaaaaaaa");
+////                }
+//////                System.out.println(resultSet.getString("hora").toString());
             }
             
             } catch (SQLException ex) {
@@ -218,4 +260,14 @@ Connection conexion2=null;
         
         
     }
+     public static Date ayer(Date fecha){
+
+         Calendar c = Calendar.getInstance();
+         c.setTime(fecha);//le pasamos nuestra fecha al calendario
+         c.add(Calendar.DATE, -1);
+         Date date = c.getTime();
+//         fecha= c.getTime();
+        // Formato.format(fecha);
+         return date;//fecha;
+     }
 }
