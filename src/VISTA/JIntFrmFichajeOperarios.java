@@ -567,38 +567,53 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
 //    }
     
     
-    double sumatoria0;
-    double sumatoria1=0;
-    Date dat;
+
+    int minutosTotales=0;
+
     
     public void sumar(){
-
-//AQUI SE SUMAN LOS VALORES DE CADA FILA PARA COLOCARLO EN EL CAMPO DE TOTAL
-       
+//AQUI SE SUMAN LOS VALORES DE CADA FILA PARA COLOCARLO EN EL CAMPO DE TOTAL       
         int totalRow= jTInformeOperario.getRowCount();
         totalRow-=1;
-        
+        String horaEntrada="";
+        String horaSalida="";
+        String [] vHE=null;
+        String [] vHS=null;
+        minutosTotales=0;
+        int h,m,s;
+        int resto=0;
         for(int i=0;i<=(totalRow);i++)
         {
             if(jTInformeOperario.getValueAt(i,2).equals("E")){
-                dat=convertir_String_Date(String.valueOf(jTInformeOperario.getValueAt(i,1)).toString());
-                System.out.println(dat+"dddddddddddddddddddddddddd");
-//                System.out.println(String.valueOf(jTInformeOperario.getValueAt(i,1)));
-//                sumatoria0+=Double.parseDouble(String.valueOf(jTInformeOperario.getValueAt(i,1)));
-                System.out.println(sumatoria0+"fffffffffffffffffffffffff");
+                horaEntrada=jTInformeOperario.getValueAt(i,1).toString();
+                vHE=horaEntrada.split(":");                
             }
             if(jTInformeOperario.getValueAt(i,2).equals("S")){
-
+                horaSalida=jTInformeOperario.getValueAt(i,1).toString();
+                vHS=horaSalida.split(":");
                 System.out.println("salida");
-//                sumatoria0-=Double.parseDouble(String.valueOf(jTInformeOperario.getValueAt(i,1)));
                 System.out.println(String.valueOf(jTInformeOperario.getValueAt(i,1)));
-//            sumatoria=Integer.parseInt(String.valueOf(jTInformeOperario.getValueAt(i,1)));
-            }//System.out.println(jTInformeOperario.getValueAt(i,2));
-//             sumatoria= Double.parseDouble(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+                
+                s=Integer.parseInt(vHS[2])-Integer.parseInt(vHE[2]);
+                if(s<0){
+                    resto=-1;
+                    s=60-s;
+                }       
+                m = (Integer.parseInt(vHS[1])-Integer.parseInt(vHE[1]))-resto;
+                resto = 0;
+                if (m < 0){
+                   m = 60 - m;
+                   resto = -1;
+                }         
+                h = (Integer.parseInt(vHS[0])-Integer.parseInt(vHE[0]))-resto;
+
+                minutosTotales+=(h*60)+m+(s/60);
+            }
+          
         }
-            sumatoria1+=sumatoria0;
+
              
-            jTminutos.setText(String.valueOf(sumatoria1));
+            jTminutos.setText(String.valueOf(minutosTotales));
 
     }
     
