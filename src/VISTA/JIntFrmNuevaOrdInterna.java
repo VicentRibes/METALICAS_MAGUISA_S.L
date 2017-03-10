@@ -16,6 +16,8 @@ import ENTIDAD.Componente;
 import ENTIDAD.Orden;
 import ENTIDAD.Proyecto;
 import ENTIDAD.Usuario;
+import UTILIDADES.CargandoEspere;
+import UTILIDADES.jcThread;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
@@ -45,6 +47,16 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         initComponents();
         cargarCBClientes();
         cargarCBProyectos();
+        Articulo art=new Articulo();
+        art.setFamilia("1102");
+        Articulo art2= new Articulo();
+        art2.setFamilia("6012");
+        try {
+            cargarCBArticulos(art);
+            cargarCBArticulosKit(art2);
+        } catch (SQLException ex) {
+            Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
    
     
@@ -80,6 +92,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         
        // Articulo art=new Articulo();
         //art.setCodigo(articulo);
+        
         
         ord.setArticulo(art);
         String unid= JOptionPane.showInputDialog("UNIDADES: ");
@@ -182,6 +195,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jButton07771 = new javax.swing.JButton();
         jButton10358 = new javax.swing.JButton();
         jButton07772 = new javax.swing.JButton();
+        jButton7773 = new javax.swing.JButton();
         jPanelPaneles = new javax.swing.JPanel();
         jButton07464 = new javax.swing.JButton();
         jButton07460 = new javax.swing.JButton();
@@ -210,13 +224,9 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jButton07386 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jButton07911 = new javax.swing.JButton();
-        jPanelTuria = new javax.swing.JPanel();
-        jButton08256 = new javax.swing.JButton();
         jPanelPaletsParis = new javax.swing.JPanel();
         jCBArticulos = new javax.swing.JComboBox<>();
-        jCBClientes = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         btnCrearPalet = new javax.swing.JButton();
         jCBMandos = new javax.swing.JComboBox<>();
         jCBTeclados = new javax.swing.JComboBox<>();
@@ -225,6 +235,31 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jlblAviso = new javax.swing.JLabel();
         jCBMotor = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
+        jPanelTuria = new javax.swing.JPanel();
+        jButton08256 = new javax.swing.JButton();
+        jPanelKit = new javax.swing.JPanel();
+        btnCrearKit = new javax.swing.JButton();
+        jCBMandosKit = new javax.swing.JComboBox<>();
+        jCBTecladosKit = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jlblAviso1 = new javax.swing.JLabel();
+        jCBMotorKit = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        jCBArticulosKit = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        jLblCanyaKit = new javax.swing.JLabel();
+        jCBCanyaKit = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        jCBPaletsTuria = new javax.swing.JComboBox<>();
+        jLabel14 = new javax.swing.JLabel();
+        jCBMotorPaletTuria = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
+        btnCrearPaletTuria = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jCBClientes = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setIconifiable(true);
@@ -238,20 +273,19 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jPanelCabeceraLayout.setHorizontalGroup(
             jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelCabeceraLayout.createSequentialGroup()
-                .addGap(127, 127, 127)
+                .addGap(119, 119, 119)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jCBProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(832, Short.MAX_VALUE))
         );
         jPanelCabeceraLayout.setVerticalGroup(
             jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCabeceraLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(jPanelCabeceraLayout.createSequentialGroup()
                 .addGroup(jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCBProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel5)
+                    .addComponent(jCBProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 28, Short.MAX_VALUE))
         );
 
         jTabbedOrdenesInternas.setTabPlacement(javax.swing.JTabbedPane.LEFT);
@@ -287,20 +321,32 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton7773.setText("carg");
+        jButton7773.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7773ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMarcosLayout = new javax.swing.GroupLayout(jPanelMarcos);
         jPanelMarcos.setLayout(jPanelMarcosLayout);
         jPanelMarcosLayout.setHorizontalGroup(
             jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMarcosLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton07770, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
-                    .addComponent(jButton10358, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(45, 45, 45)
-                .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton07771, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton07772, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMarcosLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton07770, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                            .addComponent(jButton10358, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton07771, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton07772, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanelMarcosLayout.createSequentialGroup()
+                        .addGap(265, 265, 265)
+                        .addComponent(jButton7773, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(348, Short.MAX_VALUE))
         );
         jPanelMarcosLayout.setVerticalGroup(
             jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,7 +359,9 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                 .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton10358, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton07772, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(430, Short.MAX_VALUE))
+                .addGap(102, 102, 102)
+                .addComponent(jButton7773, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(282, Short.MAX_VALUE))
         );
 
         jTabbedOrdenesInternas.addTab("MARCOS", jPanelMarcos);
@@ -626,52 +674,13 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
 
         jTabbedOrdenesInternas.addTab("MOTORES", jPanelMotores);
 
-        jButton08256.setText("CAJA AZUL");
-        jButton08256.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton08256ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanelTuriaLayout = new javax.swing.GroupLayout(jPanelTuria);
-        jPanelTuria.setLayout(jPanelTuriaLayout);
-        jPanelTuriaLayout.setHorizontalGroup(
-            jPanelTuriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTuriaLayout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanelTuriaLayout.setVerticalGroup(
-            jPanelTuriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTuriaLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(492, Short.MAX_VALUE))
-        );
-
-        jTabbedOrdenesInternas.addTab("TURIA", jPanelTuria);
-
         jCBArticulos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCBArticulosActionPerformed(evt);
             }
         });
 
-        jCBClientes.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCBClientesItemStateChanged(evt);
-            }
-        });
-        jCBClientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCBClientesActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Modelo palet");
-
-        jLabel2.setText("Cliente");
 
         btnCrearPalet.setText("ACEPTAR");
         btnCrearPalet.addActionListener(new java.awt.event.ActionListener() {
@@ -704,16 +713,12 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanelPaletsParisLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(10, 10, 10))
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPaletsParisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelPaletsParisLayout.createSequentialGroup()
                         .addGap(225, 225, 225)
                         .addComponent(jlblAviso))
-                    .addComponent(jCBClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCBArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanelPaletsParisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jCBTeclados, javax.swing.GroupLayout.Alignment.LEADING, 0, 44, Short.MAX_VALUE)
@@ -726,11 +731,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jPanelPaletsParisLayout.setVerticalGroup(
             jPanelPaletsParisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPaletsParisLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(jPanelPaletsParisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCBClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(62, 62, 62)
                 .addGroup(jPanelPaletsParisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jCBArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -755,13 +756,230 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
 
         jTabbedOrdenesInternas.addTab("PALETS PARIS", jPanelPaletsParis);
 
+        jButton08256.setText("CAJA AZUL");
+        jButton08256.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton08256ActionPerformed(evt);
+            }
+        });
+
+        btnCrearKit.setText("ACEPTAR");
+        btnCrearKit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearKitActionPerformed(evt);
+            }
+        });
+
+        jCBMandosKit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2" }));
+
+        jCBTecladosKit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2" }));
+
+        jLabel8.setText("Mandos");
+
+        jLabel9.setText("Teclados");
+
+        jlblAviso1.setText(".");
+
+        jCBMotorKit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ET", "LIFE" }));
+
+        jLabel10.setText("Motor");
+
+        jCBArticulosKit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCBArticulosKitActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setText("Articulo");
+        jLabel11.setToolTipText("");
+
+        jLblCanyaKit.setText("Caña");
+
+        jCBCanyaKit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CORTA", "LARGA" }));
+
+        jLabel12.setText("CAJAS TURIA (PUERTA)");
+        jLabel12.setToolTipText("");
+
+        javax.swing.GroupLayout jPanelKitLayout = new javax.swing.GroupLayout(jPanelKit);
+        jPanelKit.setLayout(jPanelKitLayout);
+        jPanelKitLayout.setHorizontalGroup(
+            jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelKitLayout.createSequentialGroup()
+                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelKitLayout.createSequentialGroup()
+                        .addGap(388, 388, 388)
+                        .addComponent(jlblAviso1))
+                    .addGroup(jPanelKitLayout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLblCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCBMotorKit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCBTecladosKit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCBArticulosKit, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCBCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCBMandosKit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCrearKit)))
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(295, Short.MAX_VALUE))
+        );
+        jPanelKitLayout.setVerticalGroup(
+            jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelKitLayout.createSequentialGroup()
+                .addComponent(jLabel12)
+                .addGap(11, 11, 11)
+                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCBArticulosKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jCBMotorKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLblCanyaKit)
+                    .addComponent(jCBCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jCBMandosKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jCBTecladosKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCrearKit)
+                .addGap(225, 225, 225)
+                .addComponent(jlblAviso1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel13.setText("PALETS TURIA");
+        jLabel13.setToolTipText("");
+
+        jCBPaletsTuria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCBPaletsTuriaActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("Articulo");
+        jLabel14.setToolTipText("");
+
+        jCBMotorPaletTuria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ET", "LIFE" }));
+
+        jLabel15.setText("Motor");
+        jLabel15.setToolTipText("");
+
+        btnCrearPaletTuria.setText("ACEPTAR");
+        btnCrearPaletTuria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearPaletTuriaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(76, 76, 76)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCBMotorPaletTuria, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnCrearPaletTuria)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCBPaletsTuria, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCBPaletsTuria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCBMotorPaletTuria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addGap(18, 18, 18)
+                .addComponent(btnCrearPaletTuria)
+                .addGap(0, 154, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanelTuriaLayout = new javax.swing.GroupLayout(jPanelTuria);
+        jPanelTuria.setLayout(jPanelTuriaLayout);
+        jPanelTuriaLayout.setHorizontalGroup(
+            jPanelTuriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTuriaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(160, 160, 160))
+            .addGroup(jPanelTuriaLayout.createSequentialGroup()
+                .addComponent(jPanelKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanelTuriaLayout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanelTuriaLayout.setVerticalGroup(
+            jPanelTuriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTuriaLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(jPanelKit, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedOrdenesInternas.addTab("TURIA", jPanelTuria);
+
+        jLabel2.setText("Cliente");
+
+        jCBClientes.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCBClientesItemStateChanged(evt);
+            }
+        });
+        jCBClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCBClientesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jTabbedOrdenesInternas, javax.swing.GroupLayout.PREFERRED_SIZE, 1161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jTabbedOrdenesInternas, javax.swing.GroupLayout.PREFERRED_SIZE, 1161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(133, 133, 133)
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCBClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(153, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
@@ -772,7 +990,11 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(82, Short.MAX_VALUE)
+                .addContainerGap(56, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jCBClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jTabbedOrdenesInternas, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -792,7 +1014,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addGap(0, 7, Short.MAX_VALUE))
         );
 
         pack();
@@ -962,13 +1184,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         String[] vCliente;
         vCliente=cliente.split("-");
         cli.setCodigo(vCliente[0]);       
-        Articulo art=new Articulo();
-        art.setFamilia("1102");     
-        try {
-            cargarCBArticulos(art,cli);
-        } catch (SQLException ex) {
-            Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
        
     }//GEN-LAST:event_jCBClientesActionPerformed
 
@@ -1063,6 +1279,50 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         nuevaOrd(art,false);       
     }//GEN-LAST:event_jButton08256ActionPerformed
 
+    private void btnCrearKitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearKitActionPerformed
+        String[] vArticulo=jCBArticulosKit.getSelectedItem().toString().split("-");
+        ArticuloBLL aBLL=new ArticuloBLL();
+        Articulo art=new Articulo();
+        art.setCodigo(vArticulo[1]);
+        
+        
+        String[] vCliente=jCBClientes.getSelectedItem().toString().split("-");
+        ClienteBLL cBLL=new ClienteBLL();        
+        Cliente cli=new Cliente();
+        cli.setCodigo(vCliente[0]);
+        
+        String accesorios;
+        accesorios="[N_MANDOS]="+jCBMandosKit.getSelectedItem().toString()+";[N_TECLADOS]="+jCBTecladosKit.getSelectedItem().toString();
+        try {
+            art=aBLL.obtenerAlias(art,cli,accesorios);
+            if(art.getAlias()==null){
+                   JOptionPane.showMessageDialog(this,"Alias no encontrado, la orden se creara sin alias, reviselo", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+         } catch (SQLException ex) {
+                Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        
+        String variables="\\\\[MOTOR]:"+jCBMotorKit.getSelectedItem().toString()+"\\\\[CAÑA]:"+jCBCanyaKit.getSelectedItem().toString()+"\\\\[N_MANDOS]:"+jCBMandosKit.getSelectedItem().toString()+"\\\\[N_TECLADOS]:"+jCBTecladosKit.getSelectedItem().toString();        
+        art.setVariables(variables);
+        nuevaOrd(art,false); 
+    }//GEN-LAST:event_btnCrearKitActionPerformed
+
+    private void jCBArticulosKitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBArticulosKitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCBArticulosKitActionPerformed
+
+    private void jCBPaletsTuriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBPaletsTuriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCBPaletsTuriaActionPerformed
+
+    private void btnCrearPaletTuriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPaletTuriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCrearPaletTuriaActionPerformed
+
+    private void jButton7773ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7773ActionPerformed
+       
+    }//GEN-LAST:event_jButton7773ActionPerformed
+
     public void cargarCBClientes() throws SQLException{
         ClienteBLL cBLL=new ClienteBLL();
         jCBClientes.removeAllItems();
@@ -1076,15 +1336,28 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
        
     }
     
-    public void cargarCBArticulos(Articulo art,Cliente cli) throws SQLException{ //Requiere familia
+    public void cargarCBArticulos(Articulo art) throws SQLException{ //Requiere familia
         ArticuloBLL aBLL=new ArticuloBLL();
         jCBArticulos.removeAllItems();
         ArrayList<Articulo> articulos;
-        articulos=aBLL.listaArticulos(art, cli);
+        articulos=aBLL.listaArticulos(art);
         Iterator it=articulos.iterator();
         while(it.hasNext()){
             Articulo a=((Articulo)it.next());
             jCBArticulos.addItem(a.toString());
+        }
+        
+    }
+    
+    public void cargarCBArticulosKit(Articulo art) throws SQLException{ //Requiere familia
+        ArticuloBLL aBLL=new ArticuloBLL();
+        jCBArticulosKit.removeAllItems();
+        ArrayList<Articulo> articulos;
+        articulos=aBLL.listaArticulos(art);
+        Iterator it=articulos.iterator();
+        while(it.hasNext()){
+            Articulo a=((Articulo)it.next());
+            jCBArticulosKit.addItem(a.toString());
         }
         
     }
@@ -1103,7 +1376,9 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCrearKit;
     private javax.swing.JButton btnCrearPalet;
+    private javax.swing.JButton btnCrearPaletTuria;
     private javax.swing.JButton jButton07386;
     private javax.swing.JButton jButton07420;
     private javax.swing.JButton jButton07450;
@@ -1133,20 +1408,39 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton10014;
     private javax.swing.JButton jButton10015;
     private javax.swing.JButton jButton10358;
+    private javax.swing.JButton jButton7773;
     private javax.swing.JComboBox<String> jCBArticulos;
+    private javax.swing.JComboBox<String> jCBArticulosKit;
+    private javax.swing.JComboBox<String> jCBCanyaKit;
     private javax.swing.JComboBox<String> jCBClientes;
     private javax.swing.JComboBox<String> jCBMandos;
+    private javax.swing.JComboBox<String> jCBMandosKit;
     private javax.swing.JComboBox<String> jCBMotor;
+    private javax.swing.JComboBox<String> jCBMotorKit;
+    private javax.swing.JComboBox<String> jCBMotorPaletTuria;
+    private javax.swing.JComboBox<String> jCBPaletsTuria;
     private javax.swing.JComboBox<String> jCBProyecto;
     private javax.swing.JComboBox<String> jCBTeclados;
+    private javax.swing.JComboBox<String> jCBTecladosKit;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLblCanyaKit;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelCabecera;
+    private javax.swing.JPanel jPanelKit;
     private javax.swing.JPanel jPanelMarcos;
     private javax.swing.JPanel jPanelMotores;
     private javax.swing.JPanel jPanelPaletsParis;
@@ -1157,5 +1451,6 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedOrdenesInternas;
     private javax.swing.JLabel jlblAviso;
+    private javax.swing.JLabel jlblAviso1;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,7 +12,6 @@ import ENTIDAD.Permiso;
 import ENTIDAD.Usuario;
 import UTILIDADES.ImagenFondo;
 import VISTA.JIntFrmArtFichajes;
-import VISTA.JIntFrmCrearPalets;
 import VISTA.JIntFrmFichajeOperarios;
 import VISTA.JIntFrmNuevaOrdInterna;
 import java.awt.Graphics;

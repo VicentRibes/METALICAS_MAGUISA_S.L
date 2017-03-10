@@ -10,6 +10,7 @@ import ENTIDAD.Orden;
 import ENTIDAD.Proyecto;
 import ENTIDAD.Usuario;
 import UTILIDADES.CargandoEspere;
+import UTILIDADES.jcThread;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,39 +35,41 @@ public class OrdenDAO {
         URL apiURL=null;
         
        // if(ord.getArticulo().getAlias()==null){
-             apiURL=new URL("http://192.0.3.246/api/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p4="+ord.getArticulo().getCodigo()+"&p5="+ord.getUnidades());        
+             apiURL=new URL("http://192.0.3.245:81/APICARPINGEST/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p4="+ord.getArticulo().getCodigo()+"&p5="+ord.getUnidades());        
        // }else{
-             apiURL=new URL("http://192.0.3.246/api/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p3="+ord.getArticulo().getAlias()+"&p5="+ord.getUnidades());        
+             apiURL=new URL("http://192.0.3.245:81/APICARPINGEST/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p3="+ord.getArticulo().getAlias()+"&p5="+ord.getUnidades());        
       //  }
       
       
         if(ord.getArticulo().getAlias()!=null && ord.getArticulo().getVariables()!=null){
-            apiURL=new URL("http://192.0.3.246/api/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p3="+ord.getArticulo().getAlias()+"&p5="+ord.getUnidades()+"&p6="+ord.getArticulo().getVariables());        
+            apiURL=new URL("http://192.0.3.245:81/APICARPINGEST/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p3="+ord.getArticulo().getAlias()+"&p5="+ord.getUnidades()+"&p6="+ord.getArticulo().getVariables());        
         }else if(ord.getArticulo().getAlias()!=null && ord.getArticulo().getVariables()==null){
-            apiURL=new URL("http://192.0.3.246/api/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p3="+ord.getArticulo().getAlias()+"&p5="+ord.getUnidades());        
+            apiURL=new URL("http://192.0.3.245:81/APICARPINGEST/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p3="+ord.getArticulo().getAlias()+"&p5="+ord.getUnidades());        
         }else if(ord.getArticulo().getAlias()==null && ord.getArticulo().getVariables()!=null){
-            apiURL=new URL("http://192.0.3.246/api/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p4="+ord.getArticulo().getCodigo()+"&p5="+ord.getUnidades()+"&p6="+ord.getArticulo().getVariables());        
+            apiURL=new URL("http://192.0.3.245:81/APICARPINGEST/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p4="+ord.getArticulo().getCodigo()+"&p5="+ord.getUnidades()+"&p6="+ord.getArticulo().getVariables());        
         }else{
-            apiURL=new URL("http://192.0.3.246/api/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p4="+ord.getArticulo().getCodigo()+"&p5="+ord.getUnidades());        
+            apiURL=new URL("http://192.0.3.245:81/APICARPINGEST/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p4="+ord.getArticulo().getCodigo()+"&p5="+ord.getUnidades());        
         }
         
         
         URLConnection apiURLCon=apiURL.openConnection();    
         System.out.println(apiURL);
      
-        CargandoEspere cargando=new CargandoEspere("Cargando 1");
-       
-        cargando.start();
+        CargandoEspere cargando=new CargandoEspere(apiURLCon);
+        Thread carga=new Thread(cargando);
+        carga.run();
+        //cargando.start();
    
               
         //barra.iniciarHilo();        
-    
+       
         BufferedReader br=null;
-        br = new BufferedReader(new InputStreamReader(apiURLCon.getInputStream()));     
+        //br = new BufferedReader(new InputStreamReader(apiURLCon.getInputStream()));     
        
        // barra.pararHilo(true);
         
-        cargando.interrupt();
+        carga.interrupt();
+        
         String cadena;
         cadena=br.readLine();          
         return cadena;

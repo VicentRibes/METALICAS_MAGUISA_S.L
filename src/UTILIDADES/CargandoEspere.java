@@ -10,6 +10,12 @@ import VISTA.MAGUISA;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Frame;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -22,9 +28,10 @@ import javax.swing.JOptionPane;
  * @author Informatica
  */
 public class CargandoEspere extends Thread {
-
-    public CargandoEspere(String msg) {
-        super(msg);
+    private BufferedReader br=null;
+    private URLConnection apiURL;
+    public CargandoEspere(URLConnection apiURLCon) {
+        apiURL=apiURLCon;
     }      
     public void run(){           
                          
@@ -34,7 +41,13 @@ public class CargandoEspere extends Thread {
             frame.add( input, BorderLayout.NORTH );                             
             frame.pack();
             frame.setVisible( true );             
-            
+             
+            /*try {
+                br = new BufferedReader(new InputStreamReader(apiURL.getInputStream()));
+            } catch (IOException ex) {
+                Logger.getLogger(CargandoEspere.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+             
             while(!Thread.currentThread().isInterrupted()){
              
             /*System.out.println("Cargando.....");          */

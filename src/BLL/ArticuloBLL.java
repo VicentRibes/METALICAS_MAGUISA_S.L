@@ -17,11 +17,11 @@ import java.util.ArrayList;
  * @author Informatica
  */
 public class ArticuloBLL {
-    public ArrayList <Articulo> listaArticulos(Articulo articulo,Cliente cliente) throws SQLException{
-        return ArticuloDAO.obtenerArticulos(articulo,cliente);
+    public ArrayList <Articulo> listaArticulos(Articulo articulo) throws SQLException{
+        return ArticuloDAO.obtenerArticulos(articulo);
     }
-     public ArrayList <Articulo> listaArticulosAlias(Articulo articulo,Cliente cliente) throws SQLException{
-        return ArticuloDAO.obtenerArticulos(articulo,cliente);
+     public ArrayList <Articulo> listaArticulosAlias(Articulo articulo) throws SQLException{
+        return ArticuloDAO.obtenerArticulos(articulo);
     }
     public ArrayList <Componente> listaComponentes(Articulo articulo) throws SQLException{
         return ArticuloDAO.obtenerComponentes(articulo);

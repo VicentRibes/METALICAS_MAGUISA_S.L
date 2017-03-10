@@ -21,7 +21,7 @@ import java.util.HashSet;
  * @author Informatica
  */
 public class ArticuloDAO {
-    public static ArrayList <Articulo> obtenerArticulos(Articulo articulo, Cliente cli) throws SQLException{
+    public static ArrayList <Articulo> obtenerArticulos(Articulo articulo) throws SQLException{
         Connection conexion=null;
         ResultSet resultSet;
         PreparedStatement statement;
