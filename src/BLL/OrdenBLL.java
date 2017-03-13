@@ -22,10 +22,8 @@ public class OrdenBLL {
     public OrdenBLL(){
         ordenDAO=new OrdenDAO();
     }
-    public String nuevaOrden(Orden ord,Usuario us,Cliente cli,Proyecto pro) throws IOException, InterruptedException{
-        return ordenDAO.nuevaOrden(ord,us,cli,pro);
+    public void nuevaOrden(Orden ord,Usuario us,Cliente cli,Proyecto pro) throws IOException, InterruptedException{
+         ordenDAO.nuevaOrden(ord,us,cli,pro);
     }
-    public String nuevoPalet(Orden ord,Usuario us,Cliente cli,int cantidad) throws IOException, InterruptedException{
-        return ordenDAO.nuevoPalet(ord,us,cli,cantidad);
-    }
+  
 }

@@ -44,6 +44,9 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
      */
     public int ud;
     public JIntFrmNuevaOrdInterna() throws SQLException {
+   
+      
+        
         initComponents();
         cargarCBClientes();
         cargarCBProyectos();
@@ -105,15 +108,15 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         try {
             try {       
               
-                respuestaOrden = ordBLL.nuevaOrden(ord,us,cli,pro);
-                respuestaSeparada=respuestaOrden.split("\\|");   
-                entradaOrd=Double.parseDouble(respuestaSeparada[1]);
+                ordBLL.nuevaOrden(ord,us,cli,pro);
+               // respuestaSeparada=respuestaOrden.split("\\|");   
+                //entradaOrd=Double.parseDouble(respuestaSeparada[1]);
                 
             } catch (InterruptedException ex) {
                 Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
             }
             if(palet==false){     
-                JOptionPane.showMessageDialog(null,"Numero:"+respuestaSeparada[2], "Orden Creada", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(null,"Numero:"+respuestaSeparada[2], "Orden Creada", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (IOException ex) {
              JOptionPane.showMessageDialog(this, ex, "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -160,9 +163,9 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         try {
             try {       
               
-                respuestaOrden = ordBLL.nuevaOrden(ord,us,cli,pro);
-                respuestaSeparada=respuestaOrden.split("\\|");  
-              
+           //     respuestaOrden = ordBLL.nuevaOrden(ord,us,cli,pro);
+            //    respuestaSeparada=respuestaOrden.split("\\|");  
+            ordBLL.nuevaOrden(ord,us,cli,pro);
                
             } catch (InterruptedException ex) {
                 Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
@@ -195,7 +198,6 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jButton07771 = new javax.swing.JButton();
         jButton10358 = new javax.swing.JButton();
         jButton07772 = new javax.swing.JButton();
-        jButton7773 = new javax.swing.JButton();
         jPanelPaneles = new javax.swing.JPanel();
         jButton07464 = new javax.swing.JButton();
         jButton07460 = new javax.swing.JButton();
@@ -321,32 +323,20 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             }
         });
 
-        jButton7773.setText("carg");
-        jButton7773.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7773ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanelMarcosLayout = new javax.swing.GroupLayout(jPanelMarcos);
         jPanelMarcos.setLayout(jPanelMarcosLayout);
         jPanelMarcosLayout.setHorizontalGroup(
             jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMarcosLayout.createSequentialGroup()
-                .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelMarcosLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton07770, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
-                            .addComponent(jButton10358, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(45, 45, 45)
-                        .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton07771, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton07772, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanelMarcosLayout.createSequentialGroup()
-                        .addGap(265, 265, 265)
-                        .addComponent(jButton7773, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(348, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton07770, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                    .addComponent(jButton10358, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton07771, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton07772, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(352, Short.MAX_VALUE))
         );
         jPanelMarcosLayout.setVerticalGroup(
             jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -359,9 +349,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                 .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton10358, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton07772, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(102, 102, 102)
-                .addComponent(jButton7773, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(282, Short.MAX_VALUE))
+                .addContainerGap(431, Short.MAX_VALUE))
         );
 
         jTabbedOrdenesInternas.addTab("MARCOS", jPanelMarcos);
@@ -771,6 +759,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         });
 
         jCBMandosKit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2" }));
+        jCBMandosKit.setSelectedIndex(1);
 
         jCBTecladosKit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2" }));
 
@@ -921,7 +910,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                     .addComponent(jLabel15))
                 .addGap(18, 18, 18)
                 .addComponent(btnCrearPaletTuria)
-                .addGap(0, 154, Short.MAX_VALUE))
+                .addGap(0, 107, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelTuriaLayout = new javax.swing.GroupLayout(jPanelTuria);
@@ -943,11 +932,11 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             jPanelTuriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTuriaLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jPanelKit, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelKit, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1319,10 +1308,6 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCrearPaletTuriaActionPerformed
 
-    private void jButton7773ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7773ActionPerformed
-       
-    }//GEN-LAST:event_jButton7773ActionPerformed
-
     public void cargarCBClientes() throws SQLException{
         ClienteBLL cBLL=new ClienteBLL();
         jCBClientes.removeAllItems();
@@ -1408,7 +1393,6 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton10014;
     private javax.swing.JButton jButton10015;
     private javax.swing.JButton jButton10358;
-    private javax.swing.JButton jButton7773;
     private javax.swing.JComboBox<String> jCBArticulos;
     private javax.swing.JComboBox<String> jCBArticulosKit;
     private javax.swing.JComboBox<String> jCBCanyaKit;

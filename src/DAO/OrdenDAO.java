@@ -10,7 +10,9 @@ import ENTIDAD.Orden;
 import ENTIDAD.Proyecto;
 import ENTIDAD.Usuario;
 import UTILIDADES.CargandoEspere;
+import UTILIDADES.Job;
 import UTILIDADES.jcThread;
+import VISTA.interfaz;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class OrdenDAO {
    
-    public String nuevaOrden(Orden ord,Usuario us,Cliente cli, Proyecto pro)  throws  IOException, InterruptedException{
+    public void nuevaOrden(Orden ord,Usuario us,Cliente cli, Proyecto pro)  throws  IOException, InterruptedException{
         
            
         String operacion="AddOrden";
@@ -51,11 +53,29 @@ public class OrdenDAO {
             apiURL=new URL("http://192.0.3.245:81/APICARPINGEST/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1="+ord.getEntrada()+"&p2=\\\\proyecto:"+pro.getNumero()+"\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"\\\\Almacen:"+ord.getAlmacen()+"&p4="+ord.getArticulo().getCodigo()+"&p5="+ord.getUnidades());        
         }
         
+        BufferedReader br=null;
         
-        URLConnection apiURLCon=apiURL.openConnection();    
-        System.out.println(apiURL);
+        
+        interfaz i=new interfaz();
+        i.setVisible(true);
+        i.setApiURL(apiURL);
+        i.crearOrden();
+
+      //  i.barra();
+       
+        
+       /* Thread hiloA=new Thread(new Job(apiURL), "hiloA");
+        hiloA.start();
+        while(hiloA.getState()!=Thread.State.TERMINATED){
+            System.out.println("hola");
+        }*/
+       
+       // br=Job.br;
+      
+        //URLConnection apiURLCon=apiURL.openConnection();    
+        //System.out.println(apiURL);
      
-        CargandoEspere cargando=new CargandoEspere(apiURLCon);
+       /* CargandoEspere cargando=new CargandoEspere(apiURLCon);
         Thread carga=new Thread(cargando);
         carga.run();
         //cargando.start();
@@ -69,34 +89,16 @@ public class OrdenDAO {
        // barra.pararHilo(true);
         
         carga.interrupt();
+        */
         
-        String cadena;
-        cadena=br.readLine();          
-        return cadena;
+        
+       
+       //String cadena="";
+       // cadena=br.readLine();          
+        //return cadena;
     }
     
-    public String nuevoPalet(Orden ord,Usuario us,Cliente cli,int cantidad) throws  IOException, InterruptedException{
-        String operacion="AddOrden";
-        CargandoEspere cargando=new CargandoEspere("Cargando 1");
-        cargando.start();
-        String cadena="";
-       /*LOS ESPACIOS EN BLANCO EN LA URL TIENEN QUE SER AÑADIDOS CON CARACTER ESPECIAL %20*/
-            System.out.println("palet ");
-            
-            URL apiURL=new URL("http://192.0.3.246/api/ordenes.php?usr="+us.getUsername()+"&pass="+us.getPassword()+"&op="+operacion+"&p1=-1&p2=\\\\cliente:"+cli.getCodigo()+"\\\\tipo:"+ord.getTipo()+"\\\\SerOrden:"+ord.getSerOrden()+"\\\\Estado:"+ord.getEstado()+"&p3="+ord.getArticulo().getAlias()+"&p4="+ord.getArticulo().getCodigo()+"&p5="+ord.getUnidades()+"&p6="+ord.getVariablesOrden());        
-            URLConnection apiURLCon=apiURL.openConnection();                     
-
-            BufferedReader br=null;
-            br = new BufferedReader(new InputStreamReader(apiURLCon.getInputStream()));     
-          
-            cadena=cadena+"/"+br.readLine();   
-                
-               
-        cargando.interrupt();       
-                
-        return cadena;
-        
-    }
+    
     
     
 }

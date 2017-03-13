@@ -5,6 +5,8 @@
  */
 package UTILIDADES;
 
+import VISTA.interfaz;
+
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 
 /**
  *
@@ -23,57 +26,68 @@ import javax.swing.JProgressBar;
 public class jcThread implements Runnable{
 
     private JProgressBar jProgressBar;
+    private JTextField numero;
     private int i = 1;
     private int value = 50;//retardo en milisegundos
-    private URLConnection apiURL;
-    private BufferedReader br=null;
+     public static BufferedReader br=null;
+   
     /**
  * Constructor de clase
  */
-    public jcThread(URLConnection apiURLCon)
+    public jcThread( JProgressBar jProgressBar , int value, JTextField numero )
     {
-        apiURL=apiURLCon;
-        
+        this.jProgressBar = jProgressBar;
+        this.value = value;
+        this.numero=numero;
     }
-
-
-
+    
     @Override
-    public void run() {
-           JFrame frame = new JFrame();
-            JLabel input = new JLabel("Creando orden");   
-            frame.setSize(100,100);
-            frame.add( input, BorderLayout.NORTH );                             
-            frame.pack();
-            frame.setVisible( true ); 
-            
-              
-            try {
-                br = new BufferedReader(new InputStreamReader(apiURL.getInputStream()));
+    public void run() {               
+                 
                
-            /* i=1;
+            i=1;
+            numero.setText("CREANDO ORDEN");
             //mientra el trabajo en paralelo no finalice el jProgressBar continuara su animacion una y otra vez
             while( !Job.band )
             {
-            //si llega al limite 100 comienza otra vez desde 1, sino incrementa i en +1
-            i = (i > 100) ? 1 : i+1;
-            jProgressBar.setValue(i);
-            jProgressBar.repaint();  
-            //retardo en milisegundos
-            try{Thread.sleep( this.value );}
-            catch (InterruptedException e){ System.err.println( e.getMessage() ); }            
-            //si el trabajo en paralelo a terminado
-            if( Job.band )
-            {
-            jProgressBar.setValue(100);
-            System.out.println("Trabajo finalizado...");
-            break;//rompe ciclo
-            }
-            }*/
-        } catch (IOException ex) {
-            Logger.getLogger(jcThread.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                
+                //si llega al limite 100 comienza otra vez desde 1, sino incrementa i en +1
+                i = (i > 100) ? 1 : i+1;
+                jProgressBar.setValue(i);
+                jProgressBar.repaint();  
+                //retardo en milisegundos
+                try{
+                    Thread.sleep( this.value );
+                }
+                catch (InterruptedException e){ 
+                    System.err.println( e.getMessage() ); 
+                }            
+                //si el trabajo en paralelo a terminado
+                if( Job.band )
+                {
+                    jProgressBar.setValue(100);
+                    System.out.println("Trabajo finalizado...");
+                    br=Job.br;
+                    String respuestaOrden="";
+                    String[] respuestaSeparada = null;        
+                    String cadena="";
+                    try {          
+                    cadena=br.readLine();
+                    } catch (IOException ex) {
+                    Logger.getLogger(interfaz.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    respuestaSeparada=cadena.split("\\|");   
+                    String numeroOrden=respuestaSeparada[2];
+                    numero.setText("Orden creada: "+numeroOrden);
+            
+                    break;//rompe ciclo         
+          
+              
+          
+                }
+       
        
     }
 
+    }
 }
