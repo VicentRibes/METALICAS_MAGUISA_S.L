@@ -45,7 +45,7 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
     int hora, minutos, segundos;
     Calendar calendario;
     Thread h1;
-    
+    //prova
     
     FichajeOperariosBLL fichajeOperariobll=new FichajeOperariosBLL();
     ArrayList<FichajeOperarios> fichajeOperarios= new ArrayList();
