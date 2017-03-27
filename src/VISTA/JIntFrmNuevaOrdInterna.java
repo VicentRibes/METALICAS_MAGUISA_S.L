@@ -18,7 +18,9 @@ import ENTIDAD.Proyecto;
 import ENTIDAD.Usuario;
 import UTILIDADES.CargandoEspere;
 import UTILIDADES.Job;
+import UTILIDADES.JobPalet;
 import UTILIDADES.jcThread;
+import UTILIDADES.jcThreadPalet;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
@@ -118,21 +120,15 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         try {
             try {       
                URL apiURL;
-               apiURL= ordBLL.nuevaOrden(ord,us,cli,pro);  // animacion de jProgressBar  
+               apiURL= ordBLL.nuevaOrden(ord,us,cli,pro);
                Thread tBarra=new Thread(new jcThread( this.jProgressBar2 , 400, this.numero ),"barraProgreso");
                tBarra.start();
                Thread hiloA=new Thread(new Job(apiURL), "hiloA");
                hiloA.start();
                          
         
-              synchronized(hiloA){                                 
-                   System.out.println("Esperando a que termine la creación..");     
-                   hiloA.wait();             
-               }               
-             
-               // respuestaSeparada=respuestaOrden.split("\\|");   
-                //entradaOrd=Double.parseDouble(respuestaSeparada[1]);
                 
+      
             } catch (InterruptedException ex) {
                 Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -190,11 +186,6 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                Thread tBarra=new Thread(new jcThread( this.jProgressBar2 , 400, this.numero ),"barraProgreso");
                tBarra.start();         
         
-              synchronized(hiloA){   
-                   // hiloA.sleep(5000);                  
-                   System.out.println("Esperando a que termine la creación..");                                   
-                   hiloA.wait();             
-               }     
               
            //     respuestaOrden = ordBLL.nuevaOrden(ord,us,cli,pro);
             //    respuestaSeparada=respuestaOrden.split("\\|");  
@@ -1303,15 +1294,43 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
 
     private void btnCrearPaletActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPaletActionPerformed
     
-        String[] vArticulo=jCBArticulos.getSelectedItem().toString().split("-");
-        ArticuloBLL aBLL=new ArticuloBLL();
-        Articulo art=new Articulo();
-        art.setCodigo(vArticulo[1]);
+        UsuarioBLL usBLL=new UsuarioBLL();
         
+        Usuario us=new Usuario();
+        try {
+            us = usBLL.obtenerUsuario();
+        } catch (SQLException ex) {
+            Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,ex, "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
         String[] vCliente=jCBClientes.getSelectedItem().toString().split("-");
         ClienteBLL cBLL=new ClienteBLL();        
         Cliente cli=new Cliente();
         cli.setCodigo(vCliente[0]);
+        
+        String[] vProyecto=jCBProyecto.getSelectedItem().toString().split("-");  
+        ProyectoBLL pBLL=new ProyectoBLL();
+        Proyecto pro=new Proyecto();
+        pro.setNumero(vProyecto[0]);   
+        
+ 
+        OrdenBLL ordBLL=new OrdenBLL();
+        Orden ord=new Orden();
+        ord.setEntrada(-1);
+        ord.setSerOrden("I");
+        ord.setEstado("Y");
+        ord.setTipo("I");
+        ord.setAlmacen("013");       
+    
+        
+   
+        String[] vArticulo=jCBArticulos.getSelectedItem().toString().split("-");
+        ArticuloBLL aBLL=new ArticuloBLL();
+        Articulo art=new Articulo();
+        art.setCodigo(vArticulo[1]);       
+        
+        ArrayList<Articulo> articulosPalet = new ArrayList<Articulo>(); //declaramos arraylist articulos
+       
         
         
         String variables="\\\\[MOTOR]:"+jCBMotor.getSelectedItem().toString();        
@@ -1321,6 +1340,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         accesorios="[N_MANDOS]="+jCBMandos.getSelectedItem().toString()+";[N_TECLADOS]="+jCBTeclados.getSelectedItem().toString()+";[PARISWEB]=NO";
         
         System.out.println(art.getCodigo());
+  
         ArrayList<Componente> componentes = null;
         try {
             componentes=aBLL.listaComponentes(art);
@@ -1328,30 +1348,40 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        nuevaOrd(art,true);
-     
+        
+        //nuevaOrd(art,true);     
      
         int unidades; //Unidades del componente que añadiremos en la nueva linea de la orden
-        Iterator it=componentes.iterator();
-        
+        String unid= JOptionPane.showInputDialog("UNIDADES: ");
+        ud=Integer.parseInt(unid);
+        art.setUnidades(ud); 
+        articulosPalet.add(art); //agregamos el primer articulo que sera el palet al array list.
+        Iterator it=componentes.iterator();       
         
                 
         while(it.hasNext()){
             Componente c=((Componente)it.next());
-            art.setCodigo(c.getComponente());
-            unidades=c.getUdComponente()*ud;
-            
+            Articulo art2=new Articulo();
+            art2.setCodigo(c.getComponente());
+            unidades=c.getUdComponente()*ud;   
+            art2.setUnidades(unidades);
             try {
-                art=aBLL.obtenerAlias(art,cli,accesorios);
-                if(art.getAlias()==null){
+                art2=aBLL.obtenerAlias(art2,cli,accesorios);
+                if(art2.getAlias()==null){
                     JOptionPane.showMessageDialog(this,"Alias no encontrado, la orden se creara sin alias, reviselo", "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            nuevaLineaOrd(art,unidades);                       
+            articulosPalet.add(art2);//agreagmos cada componente del palet al array list
+                         
+           // nuevaLineaOrd(art,unidades);                       
         }
+        
+         Thread tBarra=new Thread(new jcThreadPalet( this.jProgressBar2 , 400, this.numero ),"barraProgreso");
+         tBarra.start();
+         Thread hiloA=new Thread(new JobPalet(ord,us,cli,pro,articulosPalet), "hiloPalet");
+         hiloA.start();
     }//GEN-LAST:event_btnCrearPaletActionPerformed
 
     private void jButton07470ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton07470ActionPerformed

@@ -16,6 +16,7 @@ public class Articulo {
     private String tipologia;
     private String familia;
     private String variables;
+    private int unidades;
  
     public Articulo() {    
     }    
@@ -69,6 +70,14 @@ public class Articulo {
 
     public void setVariables(String variables) {
         this.variables = variables;
+    }
+
+    public int getUnidades() {
+        return unidades;
+    }
+
+    public void setUnidades(int unidades) {
+        this.unidades = unidades;
     }
     
     

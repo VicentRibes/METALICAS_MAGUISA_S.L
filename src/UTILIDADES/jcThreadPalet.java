@@ -24,19 +24,19 @@ import javax.swing.JTextField;
  *
  * @author Informatica
  */
-public class jcThread implements Runnable{
+public class jcThreadPalet implements Runnable{
 
     private JProgressBar jProgressBar;
     private JTextField numero;
     private int i = 1;
     private int value = 50;//retardo en milisegundos
     public static BufferedReader br=null;
-
+    public static String cadena;
     
     /**
  * Constructor de clase
  */
-    public jcThread( JProgressBar jProgressBar , int value, JTextField numero )
+    public jcThreadPalet( JProgressBar jProgressBar , int value, JTextField numero )
     {
         this.jProgressBar = jProgressBar;
         this.value = value;
@@ -49,10 +49,10 @@ public class jcThread implements Runnable{
     public void run() {
  
             i=1;
-            numero.setText("CREANDO ORDEN");
+            numero.setText("CREANDO ORDEN...");
           
             //mientra el trabajo en paralelo no finalice el jProgressBar continuara su animacion una y otra vez    
-            while( !Job.band )
+            while( !JobPalet.band )
             {                
                 //si llega al limite 100 comienza otra vez desde 1, sino incrementa i en +1
                 i = (i > 100) ? 1 : i+1;
@@ -60,30 +60,27 @@ public class jcThread implements Runnable{
                 jProgressBar.repaint();  
                 //retardo en milisegundos
                 try{
-                    Thread.sleep( this.value );
+                    Thread.sleep(this.value);
                 }
                 catch (InterruptedException e){ 
                     System.err.println( e.getMessage() ); 
                 }            
                 //si el trabajo en paralelo a terminado
-                if( Job.band )
+                if( JobPalet.band )
                 {
                     jProgressBar.setValue(100);
-                    System.out.println("Trabajo finalizado...");
-                    br=Job.br;
+                    System.out.println("Trabajo finalizado...");               
                     String respuestaOrden="";
                     String[] respuestaSeparada = null;        
-                    String cadena="";
-                    try {          
-                    cadena=br.readLine();
-                    } catch (IOException ex) {
-                    Logger.getLogger(interfaz.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    respuestaSeparada=cadena.split("\\|");   
-                    String numeroOrden=respuestaSeparada[2];
-                    JIntFrmNuevaOrdInterna.entradaOrd=Double.parseDouble(respuestaSeparada[1]);
-                    numero.setText("Orden creada: "+numeroOrden);
-                ;
+                 
+                    String numeroOrden="";                    
+                         
+                       
+                        respuestaSeparada=cadena.split("\\|");   
+                        numeroOrden=respuestaSeparada[2];   
+                 
+                          
+                    numero.setText("Orden creada: "+numeroOrden);                
             
                     break;//rompe ciclo               
           
