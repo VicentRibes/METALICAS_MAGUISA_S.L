@@ -17,10 +17,13 @@ import ENTIDAD.Orden;
 import ENTIDAD.Proyecto;
 import ENTIDAD.Usuario;
 import UTILIDADES.CargandoEspere;
+import UTILIDADES.Job;
 import UTILIDADES.jcThread;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
+import static java.lang.Thread.currentThread;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,29 +46,36 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
      * Creates new form JIntFrmNuevaOrdInterna
      */
     public int ud;
-    public JIntFrmNuevaOrdInterna() throws SQLException {
-   
+    public static double entradaOrd;
+  
+    public JIntFrmNuevaOrdInterna() throws SQLException {  
       
         
         initComponents();
+        jLblCanyaKit.setVisible(false);
+        jCBCanyaKit.setVisible(false);
         cargarCBClientes();
         cargarCBProyectos();
         Articulo art=new Articulo();
         art.setFamilia("1102");
         Articulo art2= new Articulo();
         art2.setFamilia("6012");
+        
+        Articulo art3= new Articulo();
+        art3.setFamilia("1101");
         try {
             cargarCBArticulos(art);
             cargarCBArticulosKit(art2);
+            cargarCBPaletsTuria(art3);
         } catch (SQLException ex) {
             Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
    
     
-    public double nuevaOrd(Articulo art,boolean palet) {         
+    public void nuevaOrd(Articulo art,boolean palet) {         
         UsuarioBLL usBLL=new UsuarioBLL();
-        double entradaOrd=0;
+        entradaOrd=0;
         Usuario us=new Usuario();
         try {
             us = usBLL.obtenerUsuario();
@@ -107,8 +117,19 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
        
         try {
             try {       
-              
-                ordBLL.nuevaOrden(ord,us,cli,pro);
+               URL apiURL;
+               apiURL= ordBLL.nuevaOrden(ord,us,cli,pro);  // animacion de jProgressBar  
+               Thread tBarra=new Thread(new jcThread( this.jProgressBar2 , 400, this.numero ),"barraProgreso");
+               tBarra.start();
+               Thread hiloA=new Thread(new Job(apiURL), "hiloA");
+               hiloA.start();
+                         
+        
+              synchronized(hiloA){                                 
+                   System.out.println("Esperando a que termine la creación..");     
+                   hiloA.wait();             
+               }               
+             
                // respuestaSeparada=respuestaOrden.split("\\|");   
                 //entradaOrd=Double.parseDouble(respuestaSeparada[1]);
                 
@@ -122,9 +143,10 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
              JOptionPane.showMessageDialog(this, ex, "ERROR", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return entradaOrd;
+        
+       
     }
-    public void nuevaLineaOrd(Articulo art,Double entradaOrd,int ud) {
+    public void nuevaLineaOrd(Articulo art,int ud) {
         UsuarioBLL usBLL=new UsuarioBLL();
         
         Usuario us=new Usuario();
@@ -144,34 +166,45 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         Proyecto pro=new Proyecto();
         pro.setNumero(vProyecto[0]);   
         
-        
+ 
         OrdenBLL ordBLL=new OrdenBLL();
         Orden ord=new Orden();
         ord.setEntrada(entradaOrd);
         ord.setSerOrden("I");
         ord.setEstado("Y");
         ord.setTipo("I");
-        ord.setAlmacen("013");
-        
-       
-     
+        ord.setAlmacen("013");       
         ord.setArticulo(art);
         
         ord.setUnidades(ud);    
         String respuestaOrden="";
         String[] respuestaSeparada = null;
         try {
-            try {       
+            try {                     
+               URL apiURL;
+               apiURL= ordBLL.nuevaOrden(ord,us,cli,pro);
+             //  Thread.currentThread().sleep(5000);
+               Thread hiloA=new Thread(new Job(apiURL), "hiloA");
+               hiloA.start();
+               // animacion de jProgressBar  
+               Thread tBarra=new Thread(new jcThread( this.jProgressBar2 , 400, this.numero ),"barraProgreso");
+               tBarra.start();         
+        
+              synchronized(hiloA){   
+                   // hiloA.sleep(5000);                  
+                   System.out.println("Esperando a que termine la creación..");                                   
+                   hiloA.wait();             
+               }     
               
            //     respuestaOrden = ordBLL.nuevaOrden(ord,us,cli,pro);
             //    respuestaSeparada=respuestaOrden.split("\\|");  
-            ordBLL.nuevaOrden(ord,us,cli,pro);
+        
                
             } catch (InterruptedException ex) {
                 Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
             }
                  
-            JOptionPane.showMessageDialog(null,"Numero:"+respuestaSeparada[2], "Orden Creada", JOptionPane.INFORMATION_MESSAGE);
+//            JOptionPane.showMessageDialog(null,"Numero:"+respuestaSeparada[2], "Orden Creada", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ex) {
              JOptionPane.showMessageDialog(this, ex, "ERROR", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
@@ -189,9 +222,6 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
-        jPanelCabecera = new javax.swing.JPanel();
-        jCBProyecto = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
         jTabbedOrdenesInternas = new javax.swing.JTabbedPane();
         jPanelMarcos = new javax.swing.JPanel();
         jButton07770 = new javax.swing.JButton();
@@ -226,6 +256,9 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jButton07386 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jButton07911 = new javax.swing.JButton();
+        jButton13004 = new javax.swing.JButton();
+        jButton13001 = new javax.swing.JButton();
+        jButton13006 = new javax.swing.JButton();
         jPanelPaletsParis = new javax.swing.JPanel();
         jCBArticulos = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -238,7 +271,6 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jCBMotor = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jPanelTuria = new javax.swing.JPanel();
-        jButton08256 = new javax.swing.JButton();
         jPanelKit = new javax.swing.JPanel();
         btnCrearKit = new javax.swing.JButton();
         jCBMandosKit = new javax.swing.JComboBox<>();
@@ -260,34 +292,31 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jCBMotorPaletTuria = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
         btnCrearPaletTuria = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        jButton08256 = new javax.swing.JButton();
+        jButton13108 = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        jPanelCabecera = new javax.swing.JPanel();
+        jCBProyecto = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
         jCBClientes = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jProgressBar2 = new javax.swing.JProgressBar();
+        numero = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
 
-        jLabel5.setText("Proyecto");
-
-        javax.swing.GroupLayout jPanelCabeceraLayout = new javax.swing.GroupLayout(jPanelCabecera);
-        jPanelCabecera.setLayout(jPanelCabeceraLayout);
-        jPanelCabeceraLayout.setHorizontalGroup(
-            jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelCabeceraLayout.createSequentialGroup()
-                .addGap(119, 119, 119)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addComponent(jCBProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(832, Short.MAX_VALUE))
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanelCabeceraLayout.setVerticalGroup(
-            jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelCabeceraLayout.createSequentialGroup()
-                .addGroup(jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jCBProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 28, Short.MAX_VALUE))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 710, Short.MAX_VALUE)
         );
 
         jTabbedOrdenesInternas.setTabPlacement(javax.swing.JTabbedPane.LEFT);
@@ -336,12 +365,12 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                 .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton07771, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton07772, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(352, Short.MAX_VALUE))
+                .addContainerGap(774, Short.MAX_VALUE))
         );
         jPanelMarcosLayout.setVerticalGroup(
             jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMarcosLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addContainerGap()
                 .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton07770, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton07771, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -349,7 +378,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                 .addGroup(jPanelMarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton10358, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton07772, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(431, Short.MAX_VALUE))
+                .addContainerGap(464, Short.MAX_VALUE))
         );
 
         jTabbedOrdenesInternas.addTab("MARCOS", jPanelMarcos);
@@ -602,37 +631,70 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton13004.setText("PROBO 60 GR TURIA 2 MANDOS");
+        jButton13004.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13004ActionPerformed(evt);
+            }
+        });
+
+        jButton13001.setText("PROBO 60 GR PARIS 1 MANDO 1TECLADO");
+        jButton13001.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13001ActionPerformed(evt);
+            }
+        });
+
+        jButton13006.setText("PROBO 60 GR VALENCIA 2 MANDOS");
+        jButton13006.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13006ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMotoresLayout = new javax.swing.GroupLayout(jPanelMotores);
         jPanelMotores.setLayout(jPanelMotoresLayout);
         jPanelMotoresLayout.setHorizontalGroup(
             jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMotoresLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton07450, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton07420, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton07524, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton07386, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton07451, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
                     .addGroup(jPanelMotoresLayout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGap(23, 23, 23)
+                        .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jButton07450, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton07420, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton07524, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton07386, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton07451, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelMotoresLayout.createSequentialGroup()
-                                .addComponent(jButton07678, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(62, 62, 62)
-                                .addComponent(jButton07679, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(50, 50, 50)
+                                .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanelMotoresLayout.createSequentialGroup()
+                                        .addComponent(jButton07678, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(62, 62, 62)
+                                        .addComponent(jButton07679, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanelMotoresLayout.createSequentialGroup()
+                                        .addComponent(jButton07581, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButton07582, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(jPanelMotoresLayout.createSequentialGroup()
-                                .addComponent(jButton07581, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton07582, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanelMotoresLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jButton07911, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanelMotoresLayout.createSequentialGroup()
-                .addComponent(jSeparator1)
+                                .addGap(30, 30, 30)
+                                .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton13006, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton07911, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 584, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanelMotoresLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jButton13004, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelMotoresLayout.createSequentialGroup()
+                    .addGap(33, 33, 33)
+                    .addComponent(jButton13001, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(1166, Short.MAX_VALUE)))
         );
         jPanelMotoresLayout.setVerticalGroup(
             jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -657,7 +719,16 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                 .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton07386, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton07911, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addComponent(jButton13006, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jButton13004, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51))
+            .addGroup(jPanelMotoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMotoresLayout.createSequentialGroup()
+                    .addContainerGap(417, Short.MAX_VALUE)
+                    .addComponent(jButton13001, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(107, 107, 107)))
         );
 
         jTabbedOrdenesInternas.addTab("MOTORES", jPanelMotores);
@@ -714,7 +785,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                     .addGroup(jPanelPaletsParisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jCBMotor, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCrearPalet, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(271, Short.MAX_VALUE))
+                .addContainerGap(684, Short.MAX_VALUE))
         );
         jPanelPaletsParisLayout.setVerticalGroup(
             jPanelPaletsParisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -744,13 +815,6 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
 
         jTabbedOrdenesInternas.addTab("PALETS PARIS", jPanelPaletsParis);
 
-        jButton08256.setText("CAJA AZUL");
-        jButton08256.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton08256ActionPerformed(evt);
-            }
-        });
-
         btnCrearKit.setText("ACEPTAR");
         btnCrearKit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -770,6 +834,11 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         jlblAviso1.setText(".");
 
         jCBMotorKit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ET", "LIFE" }));
+        jCBMotorKit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCBMotorKitActionPerformed(evt);
+            }
+        });
 
         jLabel10.setText("Motor");
 
@@ -804,16 +873,19 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                             .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLblCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCBMotorKit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jCBTecladosKit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanelKitLayout.createSequentialGroup()
+                                .addComponent(jCBMotorKit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLblCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCBCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jCBArticulosKit, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jCBCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jCBMandosKit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCrearKit)))
+                            .addComponent(btnCrearKit)
+                            .addComponent(jCBTecladosKit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(295, Short.MAX_VALUE))
         );
@@ -828,20 +900,18 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jCBMotorKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jCBMotorKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCBCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLblCanyaKit))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLblCanyaKit)
-                    .addComponent(jCBCanyaKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jCBMandosKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCBMandosKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelKitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
                     .addComponent(jCBTecladosKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(45, 45, 45)
                 .addComponent(btnCrearKit)
                 .addGap(225, 225, 225)
                 .addComponent(jlblAviso1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -872,6 +942,23 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton08256.setText("CAJA AZUL ET");
+        jButton08256.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton08256ActionPerformed(evt);
+            }
+        });
+
+        jButton13108.setText("CAJA AZUL LIFE");
+        jButton13108.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13108ActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("SEMIELABORADOS TURIA");
+        jLabel16.setToolTipText("");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -893,7 +980,15 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCBPaletsTuria, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jCBPaletsTuria, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(jButton13108, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -910,20 +1005,22 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                     .addComponent(jLabel15))
                 .addGap(18, 18, 18)
                 .addComponent(btnCrearPaletTuria)
-                .addGap(0, 107, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(jLabel16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton13108, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26))
         );
 
         javax.swing.GroupLayout jPanelTuriaLayout = new javax.swing.GroupLayout(jPanelTuria);
         jPanelTuria.setLayout(jPanelTuriaLayout);
         jPanelTuriaLayout.setHorizontalGroup(
             jPanelTuriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTuriaLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(160, 160, 160))
             .addGroup(jPanelTuriaLayout.createSequentialGroup()
                 .addComponent(jPanelKit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 424, Short.MAX_VALUE))
             .addGroup(jPanelTuriaLayout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -933,16 +1030,14 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             .addGroup(jPanelTuriaLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jPanelKit, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton08256, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(34, 34, 34))
         );
 
         jTabbedOrdenesInternas.addTab("TURIA", jPanelTuria);
 
-        jLabel2.setText("Cliente");
+        jLabel5.setText("Proyecto");
 
         jCBClientes.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -955,55 +1050,74 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jTabbedOrdenesInternas, javax.swing.GroupLayout.PREFERRED_SIZE, 1161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(133, 133, 133)
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jCBClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(153, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanelCabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(106, Short.MAX_VALUE)))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(56, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jCBClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        jLabel2.setText("Cliente");
+
+        javax.swing.GroupLayout jPanelCabeceraLayout = new javax.swing.GroupLayout(jPanelCabecera);
+        jPanelCabecera.setLayout(jPanelCabeceraLayout);
+        jPanelCabeceraLayout.setHorizontalGroup(
+            jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCabeceraLayout.createSequentialGroup()
+                .addGap(119, 119, 119)
+                .addGroup(jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addGroup(jPanelCabeceraLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel2)))
                 .addGap(18, 18, 18)
-                .addComponent(jTabbedOrdenesInternas, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(29, 29, 29)
-                    .addComponent(jPanelCabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(600, Short.MAX_VALUE)))
+                .addGroup(jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanelCabeceraLayout.createSequentialGroup()
+                        .addComponent(jCBProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(340, 340, 340)
+                        .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelCabeceraLayout.createSequentialGroup()
+                        .addComponent(jCBClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(numero, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(558, Short.MAX_VALUE))
+        );
+        jPanelCabeceraLayout.setVerticalGroup(
+            jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCabeceraLayout.createSequentialGroup()
+                .addGroup(jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(jCBProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelCabeceraLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCBClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTabbedOrdenesInternas, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanelCabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(437, 437, 437))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 7, Short.MAX_VALUE))
+                .addGap(42, 42, 42))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelCabecera, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedOrdenesInternas, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(161, 161, 161))
         );
 
         pack();
@@ -1188,7 +1302,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jCBArticulosActionPerformed
 
     private void btnCrearPaletActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPaletActionPerformed
-        double entradaOrd;
+    
         String[] vArticulo=jCBArticulos.getSelectedItem().toString().split("-");
         ArticuloBLL aBLL=new ArticuloBLL();
         Articulo art=new Articulo();
@@ -1214,11 +1328,14 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
             Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        entradaOrd=nuevaOrd(art,true);
+        nuevaOrd(art,true);
+     
+     
         int unidades; //Unidades del componente que añadiremos en la nueva linea de la orden
         Iterator it=componentes.iterator();
         
         
+                
         while(it.hasNext()){
             Componente c=((Componente)it.next());
             art.setCodigo(c.getComponente());
@@ -1233,7 +1350,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
                 Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            nuevaLineaOrd(art,entradaOrd,unidades);                       
+            nuevaLineaOrd(art,unidades);                       
         }
     }//GEN-LAST:event_btnCrearPaletActionPerformed
 
@@ -1290,8 +1407,12 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
          } catch (SQLException ex) {
                 Logger.getLogger(JIntFrmNuevaOrdInterna.class.getName()).log(Level.SEVERE, null, ex);
          }
-        
-        String variables="\\\\[MOTOR]:"+jCBMotorKit.getSelectedItem().toString()+"\\\\[CAÑA]:"+jCBCanyaKit.getSelectedItem().toString()+"\\\\[N_MANDOS]:"+jCBMandosKit.getSelectedItem().toString()+"\\\\[N_TECLADOS]:"+jCBTecladosKit.getSelectedItem().toString();        
+        String variables="";
+        if((jCBMotorKit.getSelectedItem().toString()).equals("LIFE")){
+            variables="\\\\[MOTOR]:"+jCBMotorKit.getSelectedItem().toString()+"\\\\[CAÑA]:"+jCBCanyaKit.getSelectedItem().toString()+"\\\\[N_MANDOS]:"+jCBMandosKit.getSelectedItem().toString()+"\\\\[N_TECLADOS]:"+jCBTecladosKit.getSelectedItem().toString();        
+        }else{
+            variables="\\\\[MOTOR]:"+jCBMotorKit.getSelectedItem().toString()+"\\\\[N_MANDOS]:"+jCBMandosKit.getSelectedItem().toString()+"\\\\[N_TECLADOS]:"+jCBTecladosKit.getSelectedItem().toString();        
+        }
         art.setVariables(variables);
         nuevaOrd(art,false); 
     }//GEN-LAST:event_btnCrearKitActionPerformed
@@ -1305,8 +1426,57 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jCBPaletsTuriaActionPerformed
 
     private void btnCrearPaletTuriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPaletTuriaActionPerformed
-        // TODO add your handling code here:
+        String[] vArticulo=jCBPaletsTuria.getSelectedItem().toString().split("-");
+        ArticuloBLL aBLL=new ArticuloBLL();
+        Articulo art=new Articulo();
+        art.setCodigo(vArticulo[1]);        
+        
+        String[] vCliente=jCBClientes.getSelectedItem().toString().split("-");
+        ClienteBLL cBLL=new ClienteBLL();        
+        Cliente cli=new Cliente();
+        cli.setCodigo(vCliente[0]);    
+        String abrvCliente;
+        abrvCliente=vCliente[1].substring(0,5);
+   
+        String variables="\\\\[MOTOR]:"+jCBMotorPaletTuria.getSelectedItem().toString()+"\\\\[CLIENTE]:"+abrvCliente;        
+        art.setVariables(variables);
+        nuevaOrd(art,false);
     }//GEN-LAST:event_btnCrearPaletTuriaActionPerformed
+
+    private void jCBMotorKitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBMotorKitActionPerformed
+        if((jCBMotorKit.getSelectedItem().toString()).equals("LIFE")){
+            jLblCanyaKit.setVisible(true);
+            jCBCanyaKit.setVisible(true);
+        }else{
+            jLblCanyaKit.setVisible(false);
+            jCBCanyaKit.setVisible(false);
+        }
+        
+    }//GEN-LAST:event_jCBMotorKitActionPerformed
+
+    private void jButton13004ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13004ActionPerformed
+        Articulo art=new Articulo();
+        art.setCodigo("13004");
+        nuevaOrd(art,false);  
+    }//GEN-LAST:event_jButton13004ActionPerformed
+
+    private void jButton13001ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13001ActionPerformed
+        Articulo art=new Articulo();
+        art.setCodigo("13001");
+        nuevaOrd(art,false);  
+    }//GEN-LAST:event_jButton13001ActionPerformed
+
+    private void jButton13006ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13006ActionPerformed
+        Articulo art=new Articulo();
+        art.setCodigo("13006");
+        nuevaOrd(art,false);  
+    }//GEN-LAST:event_jButton13006ActionPerformed
+
+    private void jButton13108ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13108ActionPerformed
+        Articulo art=new Articulo();
+        art.setCodigo("13108");
+        nuevaOrd(art,false);  
+    }//GEN-LAST:event_jButton13108ActionPerformed
 
     public void cargarCBClientes() throws SQLException{
         ClienteBLL cBLL=new ClienteBLL();
@@ -1343,6 +1513,18 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
         while(it.hasNext()){
             Articulo a=((Articulo)it.next());
             jCBArticulosKit.addItem(a.toString());
+        }
+        
+    }
+    public void cargarCBPaletsTuria(Articulo art) throws SQLException{ //Requiere familia
+        ArticuloBLL aBLL=new ArticuloBLL();
+        jCBPaletsTuria.removeAllItems();
+        ArrayList<Articulo> articulos;
+        articulos=aBLL.listaArticulos(art);
+        Iterator it=articulos.iterator();
+        while(it.hasNext()){
+            Articulo a=((Articulo)it.next());
+            jCBPaletsTuria.addItem(a.toString());
         }
         
     }
@@ -1393,6 +1575,10 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton10014;
     private javax.swing.JButton jButton10015;
     private javax.swing.JButton jButton10358;
+    private javax.swing.JButton jButton13001;
+    private javax.swing.JButton jButton13004;
+    private javax.swing.JButton jButton13006;
+    private javax.swing.JButton jButton13108;
     private javax.swing.JComboBox<String> jCBArticulos;
     private javax.swing.JComboBox<String> jCBArticulosKit;
     private javax.swing.JComboBox<String> jCBCanyaKit;
@@ -1413,6 +1599,7 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1432,9 +1619,11 @@ public class JIntFrmNuevaOrdInterna extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanelTuria;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JProgressBar jProgressBar2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedOrdenesInternas;
     private javax.swing.JLabel jlblAviso;
     private javax.swing.JLabel jlblAviso1;
+    private javax.swing.JTextField numero;
     // End of variables declaration//GEN-END:variables
 }

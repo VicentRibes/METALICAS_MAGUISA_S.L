@@ -5,6 +5,7 @@
  */
 package UTILIDADES;
 
+import VISTA.JIntFrmNuevaOrdInterna;
 import VISTA.interfaz;
 
 import java.awt.BorderLayout;
@@ -29,8 +30,9 @@ public class jcThread implements Runnable{
     private JTextField numero;
     private int i = 1;
     private int value = 50;//retardo en milisegundos
-     public static BufferedReader br=null;
-   
+    public static BufferedReader br=null;
+
+    
     /**
  * Constructor de clase
  */
@@ -39,18 +41,19 @@ public class jcThread implements Runnable{
         this.jProgressBar = jProgressBar;
         this.value = value;
         this.numero=numero;
+        jProgressBar.setValue(50);
+   
     }
     
     @Override
-    public void run() {               
-                 
-               
+    public void run() {
+ 
             i=1;
             numero.setText("CREANDO ORDEN");
-            //mientra el trabajo en paralelo no finalice el jProgressBar continuara su animacion una y otra vez
+          
+            //mientra el trabajo en paralelo no finalice el jProgressBar continuara su animacion una y otra vez    
             while( !Job.band )
-            {
-                
+            {                
                 //si llega al limite 100 comienza otra vez desde 1, sino incrementa i en +1
                 i = (i > 100) ? 1 : i+1;
                 jProgressBar.setValue(i);
@@ -78,16 +81,16 @@ public class jcThread implements Runnable{
                     }
                     respuestaSeparada=cadena.split("\\|");   
                     String numeroOrden=respuestaSeparada[2];
+                    JIntFrmNuevaOrdInterna.entradaOrd=Double.parseDouble(respuestaSeparada[1]);
                     numero.setText("Orden creada: "+numeroOrden);
+                ;
             
-                    break;//rompe ciclo         
+                    break;//rompe ciclo               
           
-              
-          
-                }
+                } 
        
-       
+             }
+        
     }
 
-    }
 }

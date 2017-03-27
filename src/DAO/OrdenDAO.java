@@ -23,14 +23,20 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 
 /**
  *
  * @author Informatica
  */
 public class OrdenDAO {
+     public static boolean band=false;  
+     private URL apiURL=null;
+     public static BufferedReader br=null;
+  
    
-    public void nuevaOrden(Orden ord,Usuario us,Cliente cli, Proyecto pro)  throws  IOException, InterruptedException{
+    public URL nuevaOrden(Orden ord,Usuario us,Cliente cli, Proyecto pro)  throws  IOException, InterruptedException{
         
            
         String operacion="AddOrden";
@@ -55,12 +61,21 @@ public class OrdenDAO {
         
         BufferedReader br=null;
         
+      
         
+        
+       /* 
         interfaz i=new interfaz();
+        
+      // i.main();
         i.setVisible(true);
         i.setApiURL(apiURL);
         i.crearOrden();
-
+*/
+        /*while(Job.band==false){
+            
+        }*/
+       // System.out.println("hola ja he acabat xavalin");
       //  i.barra();
        
         
@@ -73,7 +88,7 @@ public class OrdenDAO {
        // br=Job.br;
       
         //URLConnection apiURLCon=apiURL.openConnection();    
-        //System.out.println(apiURL);
+        System.out.println(apiURL);
      
        /* CargandoEspere cargando=new CargandoEspere(apiURLCon);
         Thread carga=new Thread(cargando);
@@ -95,7 +110,7 @@ public class OrdenDAO {
        
        //String cadena="";
        // cadena=br.readLine();          
-        //return cadena;
+        return apiURL;
     }
     
     

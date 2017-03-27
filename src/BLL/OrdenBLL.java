@@ -12,6 +12,7 @@ import ENTIDAD.Proyecto;
 import ENTIDAD.Usuario;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  *
@@ -22,8 +23,8 @@ public class OrdenBLL {
     public OrdenBLL(){
         ordenDAO=new OrdenDAO();
     }
-    public void nuevaOrden(Orden ord,Usuario us,Cliente cli,Proyecto pro) throws IOException, InterruptedException{
-         ordenDAO.nuevaOrden(ord,us,cli,pro);
+    public URL nuevaOrden(Orden ord,Usuario us,Cliente cli,Proyecto pro) throws IOException, InterruptedException{
+         return ordenDAO.nuevaOrden(ord,us,cli,pro);
     }
   
 }

@@ -60,7 +60,7 @@ public class MAGUISA extends javax.swing.JFrame {
         /*jMenuItem_ArtFichajes.setVisible(false);
         jMenuItem_NuevaOrden.setVisible(false);
         jMenuItemPalets.setVisible(false);*/
-        jPanelPrincipal.setBorder(new ImagenFondo());
+       // jPanelPrincipal.setBorder(new ImagenFondo());
         this.setExtendedState(MAGUISA.MAXIMIZED_BOTH);
         
   
@@ -291,20 +291,15 @@ public class MAGUISA extends javax.swing.JFrame {
             super.paintChildren(g);
         }
     }
-    public static void main(String args[]) {
+    public static void main(String args[]) {        
         
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-               
-                new MAGUISA().setVisible(true);
+            public void run() {               
+                new MAGUISA().setVisible(true);            
             }
         });
         
-    }
-      
- 
-
- 
+    }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
