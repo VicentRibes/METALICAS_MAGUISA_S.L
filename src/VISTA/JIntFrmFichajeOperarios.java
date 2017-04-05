@@ -584,37 +584,66 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         int resto=0;
         for(int i=0;i<=(totalRow);i++)
         {
-            if(jTInformeOperario.getValueAt(i,2).equals("E")){
-                horaEntrada=jTInformeOperario.getValueAt(i,1).toString();
-                vHE=horaEntrada.split(":");                
-            }
-            if(jTInformeOperario.getValueAt(i,2).equals("S")){
-                horaSalida=jTInformeOperario.getValueAt(i,1).toString();
-                vHS=horaSalida.split(":");
-                System.out.println("salida");
-                System.out.println(String.valueOf(jTInformeOperario.getValueAt(i,1)));
-                
-                s=Integer.parseInt(vHS[2])-Integer.parseInt(vHE[2]);
-                if(s<0){
-                    resto=-1;
-                    s=60-s;
-                }       
-                m = (Integer.parseInt(vHS[1])-Integer.parseInt(vHE[1]))-resto;
-                resto = 0;
-                if (m < 0){
-                   m = 60 - m;
-                   resto = -1;
-                }         
-                h = (Integer.parseInt(vHS[0])-Integer.parseInt(vHE[0]))-resto;
+//           if(jTInformeOperario.getValueAt(i,2).equals("E")){
+//                horaEntrada=jTInformeOperario.getValueAt(i,1).toString();
+//                vHE=horaEntrada.split(":");                
+//            }
+//            if(jTInformeOperario.getValueAt(i,2).equals("S")){
+//                horaSalida=jTInformeOperario.getValueAt(i,1).toString();
+//                vHS=horaSalida.split(":");
+//                System.out.println("salida");
+//                System.out.println(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+//                
+//                s=Integer.parseInt(vHS[2])-Integer.parseInt(vHE[2]);
+//                if(s<0){
+//                    resto=-1;
+//                    s=60-s;
+//                }       
+//                m = (Integer.parseInt(vHS[1])-Integer.parseInt(vHE[1]))-resto;
+//                resto = 0;
+//                if (m < 0){
+//                   m = 60 - m;
+//                   resto = -1;
+//                }         
+//                h = (Integer.parseInt(vHS[0])-Integer.parseInt(vHE[0]))-resto;
+//
+//                minutosTotales+=(h*60)+m+(s/60);
+//            }
+//          
+            //recoger hora entrada
+            horaEntrada=jTInformeOperario.getValueAt(i,1).toString();
+            vHE=horaEntrada.split(":");
+            
+            //recoger hora salida
+            horaSalida=jTInformeOperario.getValueAt(i,3).toString();
+            vHS=horaSalida.split(":");
+            //System.out.println("salida");
+            //System.out.println(String.valueOf(jTInformeOperario.getValueAt(i,1)));
+//            System.out.println(horaEntrada+" ddddd "+i); 
+//            System.out.println(horaSalida+" ddddd "+i);
+            s=Integer.parseInt(vHS[2])-Integer.parseInt(vHE[2]);
+            if(s<0){
+                resto=-1;
+                s=60-s;
+            }       
+            m = (Integer.parseInt(vHS[1])-Integer.parseInt(vHE[1]))-resto;
+            resto = 0;
+            if (m < 0){
+                m = 60 - m;
+                resto = -1;
+            }         
+            h = (Integer.parseInt(vHS[0])-Integer.parseInt(vHE[0]))-resto;
 
-                minutosTotales+=(h*60)+m+(s/60);
+            minutosTotales+=(h*60)+m+(s/60);
+            //en el caso de que entre el dia anterior, para que no salgan los minutos negativos, sumamos 24horas (1440 minutos)
+            if (minutosTotales<0){
+                minutosTotales=minutosTotales+1440;
             }
-          
         }
 
              
             jTminutos.setText(String.valueOf(minutosTotales));
-
+        
     }
     
 }

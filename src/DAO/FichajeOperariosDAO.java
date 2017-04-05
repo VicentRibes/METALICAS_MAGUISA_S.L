@@ -236,13 +236,22 @@ Connection conexion2=null;
            
            //CONSULTA QUE RECOJE LA ULTIMA ENTRADA ANTES DE LA ULTIMA SALIDA
            resultSet = statement.executeQuery();
+           String salir;
+           String cortSalir;
+           String entrar;
+           String cortEntrar;
             while (resultSet.next()) {
                 FichajeOperarios fiop=new FichajeOperarios();            
                 //fiop.setHora(resultSet.getString("FECHA_SALIDA"));
                 fiop.setHora_Salida(resultSet.getString("HORA_SALIDA"));
                 //fiop.setTipo(resultSet.getString("TIPO"));
-                fiop.setFecha_Salida(resultSet.getString("SALIDA"));
-                fiop.setFecha_Entrada(resultSet.getString("ENTRADA"));
+                salir=resultSet.getString("SALIDA");//recogemos el resultado para cortar los caracteres que queremos despreciar
+                cortSalir = salir.substring(0, 10);
+                fiop.setFecha_Salida(cortSalir);
+                //fiop.setFecha_Salida(resultSet.getString("SALIDA"));
+                entrar=resultSet.getString("ENTRADA");
+                cortEntrar=entrar.substring(0, 10);
+                fiop.setFecha_Entrada(cortEntrar);
                 //fiop.setTipo(resultSet.getString("SALIDA"));
                 //fiop.setTipo(resultSet.getString("FECHA_ENTRADA"));
                 fiop.setHora_Entrada(resultSet.getString("HORA_ENTRADA"));
