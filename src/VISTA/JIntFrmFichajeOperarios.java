@@ -584,6 +584,15 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
         int resto=0;
         for(int i=0;i<=(totalRow);i++)
         {
+            h=0;//vaciamos cache
+            m=0;
+            s=0;
+            resto=0;
+            horaEntrada="";
+            horaSalida="";
+            vHE=null;
+            vHS=null;
+                    
 //           if(jTInformeOperario.getValueAt(i,2).equals("E")){
 //                horaEntrada=jTInformeOperario.getValueAt(i,1).toString();
 //                vHE=horaEntrada.split(":");                
@@ -636,11 +645,11 @@ public class JIntFrmFichajeOperarios extends javax.swing.JInternalFrame implemen
 
             minutosTotales+=(h*60)+m+(s/60);
             //en el caso de que entre el dia anterior, para que no salgan los minutos negativos, sumamos 24horas (1440 minutos)
+
+        }
             if (minutosTotales<0){
                 minutosTotales=minutosTotales+1440;
             }
-        }
-
              
             jTminutos.setText(String.valueOf(minutosTotales));
         
