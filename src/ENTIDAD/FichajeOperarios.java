@@ -66,6 +66,15 @@ public class FichajeOperarios {
         this.Fecha_Salida = Fecha_Salida;
     }
     private String Tipo;
+    private String Tipo2;
+
+    public String getTipo2() {
+        return Tipo2;
+    }
+
+    public void setTipo2(String Tipo2) {
+        this.Tipo2 = Tipo2;
+    }
     private String Centro;
 //    Date dat=new Date();
 //    DateFormat hora=new SimpleDateFormat("HH:mm:ss");

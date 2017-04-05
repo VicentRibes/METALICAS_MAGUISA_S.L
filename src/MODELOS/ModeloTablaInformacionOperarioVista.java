@@ -17,18 +17,30 @@ public class ModeloTablaInformacionOperarioVista extends AbstractTableModel {
     ArrayList datos = new ArrayList(); 
     //String [] columnas = {"CODIGO","OPERARIO","FICHA_INICIO","FICHA_FIN","CENTRO"/*"VER OPERARIO"/*,"TIPO"*/};
     //String [] columnas = {"CENTRO","HORA ENTRADA","HORA SALIDA"/*"VER OPERARIO"/*,"TIPO"*/};
-    String [] columnas = {"CENTRO","HORA","TIPO"/*"VER OPERARIO"/*,"TIPO"*/};
+    //String [] columnas = {"CENTRO","HORA","TIPO"/*"VER OPERARIO"/*,"TIPO"*/};
+    //PROVA COLUMNES NOVA SQL
+    String [] columnas = {"HORA_SALIDA","SALIDA","HORA_ENTRADA","ENTRADA","CENTRO"/*"VER OPERARIO"/*,"TIPO"*/};
     Class[] types = new Class [] {//tipo de datos de cada columna        
-        java.lang.String.class, java.lang.String.class, java.lang.String.class//, java.lang.String.class, java.lang.String.class
+        //java.lang.String.class, java.lang.String.class, java.lang.String.class//, java.lang.String.class, java.lang.String.class
+        //nova sql
+        java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
     };
     public ModeloTablaInformacionOperarioVista (ArrayList<FichajeOperarios> informacionOperarios) {
         FichajeOperarios fiOp=new FichajeOperarios();
         //Creamos los objetos de una fila
         for(int i=0;i<informacionOperarios.size();i++){
             fiOp=(FichajeOperarios) informacionOperarios.get(i);
-            Object [] fila = new Object[3];
+            //antes de nova sql Object [] fila = new Object[3];
+            Object [] fila = new Object[5];
             //fila[0] = fiOp.getCodigo();
             //fila[1] = fiOp.getNombre();
+            fila[0]=fiOp.getHora_Salida();
+            fila[1]=fiOp.getTipo();//tipo 'S'
+            fila[2]=fiOp.getHora_Entrada();
+            fila[3]=fiOp.getTipo2();//tipo 'E'
+            fila[4]=fiOp.getCentro();
+            
+ /*           
             fila[0] = fiOp.getCentro();
 //            fila[1] = fiOp.getFicha_inicio();
 //            fila[2] = fiOp.getFicha_fin();
@@ -39,7 +51,7 @@ public class ModeloTablaInformacionOperarioVista extends AbstractTableModel {
             //fila[4] =new JButton("VER");
             //fila[4] = fiOp.getTipo();
             
-
+*/
             datos.add(fila);
         }
     }
