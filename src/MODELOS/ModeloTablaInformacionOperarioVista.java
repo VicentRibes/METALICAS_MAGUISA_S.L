@@ -19,7 +19,7 @@ public class ModeloTablaInformacionOperarioVista extends AbstractTableModel {
     //String [] columnas = {"CENTRO","HORA ENTRADA","HORA SALIDA"/*"VER OPERARIO"/*,"TIPO"*/};
     //String [] columnas = {"CENTRO","HORA","TIPO"/*"VER OPERARIO"/*,"TIPO"*/};
     //PROVA COLUMNES NOVA SQL
-    String [] columnas = {"HORA_SALIDA","SALIDA","HORA_ENTRADA","ENTRADA","CENTRO"/*"VER OPERARIO"/*,"TIPO"*/};
+    String [] columnas = {"CENTRO","HORA_ENTRADA","ENTRADA","HORA_SALIDA","SALIDA"/*"VER OPERARIO"/*,"TIPO"*/};
     Class[] types = new Class [] {//tipo de datos de cada columna        
         //java.lang.String.class, java.lang.String.class, java.lang.String.class//, java.lang.String.class, java.lang.String.class
         //nova sql
@@ -34,11 +34,13 @@ public class ModeloTablaInformacionOperarioVista extends AbstractTableModel {
             Object [] fila = new Object[5];
             //fila[0] = fiOp.getCodigo();
             //fila[1] = fiOp.getNombre();
-            fila[0]=fiOp.getHora_Salida();
-            fila[1]=fiOp.getTipo();//tipo 'S'
-            fila[2]=fiOp.getHora_Entrada();
-            fila[3]=fiOp.getTipo2();//tipo 'E'
-            fila[4]=fiOp.getCentro();
+            fila[3]=fiOp.getHora_Salida();
+            fila[4]=fiOp.getFecha_Salida();
+            //fila[3]=fiOp.getTipo();//tipo 'S'
+            fila[2]=fiOp.getFecha_Entrada();
+            fila[1]=fiOp.getHora_Entrada();
+            //fila[1]=fiOp.getTipo2();//tipo 'E'
+            fila[0]=fiOp.getCentro();
             
  /*           
             fila[0] = fiOp.getCentro();

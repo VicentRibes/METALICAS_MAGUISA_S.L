@@ -217,9 +217,9 @@ Connection conexion2=null;
                    + "                          group by op.codigo,op.nombre,f2.fecha,f2.hora,f2.tipo,centro.DESCRIP");
     */
            //CONSULTA QUE RECOJE LA ULTIMA ENTRADA ANTES DE LA ULTIMA SALIDA
-           statement=conexion.prepareStatement("select hora as HORA_SALIDA,f2.tipo as SALIDA,"
+           statement=conexion.prepareStatement("select hora as HORA_SALIDA,f2.fecha as SALIDA,"
                    +"(select top(1) f22.hora from e001_fichajes2 as f22 where f22.OPERARIO=f2.OPERARIO and f22.tipo='e' and f22.recno<f2.recno order by f22.recno DESC) as HORA_ENTRADA," 
-                   +"(select top(1) f22.tipo from e001_fichajes2 as f22 where f22.OPERARIO=f2.OPERARIO and f22.tipo='e' and f22.recno<f2.recno order by f22.recno DESC) as ENTRADA,"
+                   +"(select top(1) f22.fecha from e001_fichajes2 as f22 where f22.OPERARIO=f2.OPERARIO and f22.tipo='e' and f22.recno<f2.recno order by f22.recno DESC) as ENTRADA,"
                    +"centro.DESCRIP as CENTRO " 
                    +"from e001_fichajes2 as f2 JOIN e001_centrost as centro on CENTROTRAB=centro.CODIGO where OPERARIO='"+codigo+"' and f2.tipo='s' and fecha='"+formatoFecha.format(fecha)+"'");
 
@@ -241,10 +241,12 @@ Connection conexion2=null;
                 //fiop.setHora(resultSet.getString("FECHA_SALIDA"));
                 fiop.setHora_Salida(resultSet.getString("HORA_SALIDA"));
                 //fiop.setTipo(resultSet.getString("TIPO"));
-                fiop.setTipo(resultSet.getString("SALIDA"));
+                fiop.setFecha_Salida(resultSet.getString("SALIDA"));
+                fiop.setFecha_Entrada(resultSet.getString("ENTRADA"));
+                //fiop.setTipo(resultSet.getString("SALIDA"));
                 //fiop.setTipo(resultSet.getString("FECHA_ENTRADA"));
                 fiop.setHora_Entrada(resultSet.getString("HORA_ENTRADA"));
-                fiop.setTipo2(resultSet.getString("ENTRADA"));
+                //fiop.setTipo2(resultSet.getString("ENTRADA"));
                 fiop.setCentro(resultSet.getString("CENTRO"));
                 FichajeOperarios.add(fiop);           
            
